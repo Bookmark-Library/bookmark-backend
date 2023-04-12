@@ -71,9 +71,15 @@ class Book
      */
     private $authors;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Genre::class, mappedBy="books")
+     */
+    private $genres;
+
     public function __construct()
     {
         $this->authors = new ArrayCollection();
+        $this->genres = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -211,6 +217,33 @@ class Book
     {
         if ($this->authors->removeElement($author)) {
             $author->removeBook($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Genre>
+     */
+    public function getGenres(): Collection
+    {
+        return $this->genres;
+    }
+
+    public function addGenre(Genre $genre): self
+    {
+        if (!$this->genres->contains($genre)) {
+            $this->genres[] = $genre;
+            $genre->addBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGenre(Genre $genre): self
+    {
+        if ($this->genres->removeElement($genre)) {
+            $genre->removeBook($this);
         }
 
         return $this;
