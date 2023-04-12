@@ -36,10 +36,7 @@ class Book
      */
     private $collection;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $publicationDate;
+
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -47,7 +44,7 @@ class Book
     private $summary;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true, unique=true)
+     * @ORM\Column(type="string", nullable=true, unique=true)
      */
     private $isbn;
 
@@ -67,6 +64,12 @@ class Book
     private $image;
 
     /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $publicationDate;
+
+
+    /**
      * @ORM\ManyToMany(targetEntity=Author::class, mappedBy="books")
      */
     private $authors;
@@ -75,6 +78,7 @@ class Book
      * @ORM\ManyToMany(targetEntity=Genre::class, mappedBy="books")
      */
     private $genres;
+
 
     public function __construct()
     {
@@ -123,17 +127,6 @@ class Book
         return $this;
     }
 
-    public function getPublicationDate(): ?\DateTimeInterface
-    {
-        return $this->publicationDate;
-    }
-
-    public function setPublicationDate(?\DateTimeInterface $publicationDate): self
-    {
-        $this->publicationDate = $publicationDate;
-
-        return $this;
-    }
 
     public function getSummary(): ?string
     {
@@ -147,17 +140,6 @@ class Book
         return $this;
     }
 
-    public function getIsbn(): ?int
-    {
-        return $this->isbn;
-    }
-
-    public function setIsbn(?int $isbn): self
-    {
-        $this->isbn = $isbn;
-
-        return $this;
-    }
 
     public function getPages(): ?int
     {
@@ -245,6 +227,30 @@ class Book
         if ($this->genres->removeElement($genre)) {
             $genre->removeBook($this);
         }
+
+        return $this;
+    }
+
+    public function getIsbn(): ?string
+    {
+        return $this->isbn;
+    }
+
+    public function setIsbn(?string $isbn): self
+    {
+        $this->isbn = $isbn;
+
+        return $this;
+    }
+
+    public function getPublicationDate(): ?\DateTimeInterface
+    {
+        return $this->publicationDate;
+    }
+
+    public function setPublicationDate(?\DateTimeInterface $publicationDate): self
+    {
+        $this->publicationDate = $publicationDate;
 
         return $this;
     }
