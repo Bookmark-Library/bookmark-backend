@@ -25,7 +25,7 @@ class Genre
     private $name;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="smallint", options={"default": 0})
      */
     private $homeOrder;
 
@@ -37,6 +37,7 @@ class Genre
     public function __construct()
     {
         $this->books = new ArrayCollection();
+        $this->homeOrder = 0;
     }
 
     public function getId(): ?int
