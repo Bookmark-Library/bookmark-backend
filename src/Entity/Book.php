@@ -81,11 +81,17 @@ class Book
      */
     private $genres;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Library::class, mappedBy="book", orphanRemoval=true)
+     */
+    private $libraries;
+
 
     public function __construct()
     {
         $this->authors = new ArrayCollection();
         $this->genres = new ArrayCollection();
+        $this->libraries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -253,6 +259,36 @@ class Book
     public function setPublicationDate(?string $publicationDate): self
     {
         $this->publicationDate = $publicationDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Library>
+     */
+    public function getLibraries(): Collection
+    {
+        return $this->libraries;
+    }
+
+    public function addLibrary(Library $library): self
+    {
+        if (!$this->libraries->contains($library)) {
+            $this->libraries[] = $library;
+            $library->setBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLibrary(Library $library): self
+    {
+        if ($this->libraries->removeElement($library)) {
+            // set the owning side to null (unless already changed)
+            if ($library->getBook() === $this) {
+                $library->setBook(null);
+            }
+        }
 
         return $this;
     }
