@@ -18,24 +18,24 @@ class Library
     private $id;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default": false})
      */
-    private $isRead;
+    private $read;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default": false})
      */
-    private $isPurchased;
+    private $purchased;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default": false})
      */
-    private $isFavorite;
+    private $favorite;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default": false})
      */
-    private $isWanted;
+    private $wishlist;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -64,58 +64,19 @@ class Library
      */
     private $user;
 
+    public function __construct()
+    {
+        $this->read = false;
+        $this->purchased = false;
+        $this->favorite = false;
+        $this->wishlist = false; 
+    }
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function isIsRead(): ?bool
-    {
-        return $this->isRead;
-    }
-
-    public function setIsRead(bool $isRead): self
-    {
-        $this->isRead = $isRead;
-
-        return $this;
-    }
-
-    public function isIsPurchased(): ?bool
-    {
-        return $this->isPurchased;
-    }
-
-    public function setIsPurchased(bool $isPurchased): self
-    {
-        $this->isPurchased = $isPurchased;
-
-        return $this;
-    }
-
-    public function isIsFavorite(): ?bool
-    {
-        return $this->isFavorite;
-    }
-
-    public function setIsFavorite(bool $isFavorite): self
-    {
-        $this->isFavorite = $isFavorite;
-
-        return $this;
-    }
-
-    public function isIsWanted(): ?bool
-    {
-        return $this->isWanted;
-    }
-
-    public function setIsWanted(bool $isWanted): self
-    {
-        $this->isWanted = $isWanted;
-
-        return $this;
-    }
 
     public function getComment(): ?string
     {
@@ -176,4 +137,53 @@ class Library
 
         return $this;
     }
+
+    public function isRead(): ?bool
+    {
+        return $this->read;
+    }
+
+    public function setRead(bool $read): self
+    {
+        $this->read = $read;
+
+        return $this;
+    }
+
+    public function isPurchased(): ?bool
+    {
+        return $this->purchased;
+    }
+
+    public function setPurchased(bool $purchased): self
+    {
+        $this->purchased = $purchased;
+
+        return $this;
+    }
+
+    public function isFavorite(): ?bool
+    {
+        return $this->favorite;
+    }
+
+    public function setFavorite(bool $favorite): self
+    {
+        $this->favorite = $favorite;
+
+        return $this;
+    }
+
+    public function isWishlist(): ?bool
+    {
+        return $this->wishlist;
+    }
+
+    public function setWishlist(bool $wishlist): self
+    {
+        $this->wishlist = $wishlist;
+
+        return $this;
+    }
+
 }
