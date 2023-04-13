@@ -6,6 +6,7 @@ use Faker\Factory;
 use App\Entity\Book;
 use App\Entity\Genre;
 use App\Entity\Author;
+use App\Entity\User;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 
@@ -14,6 +15,13 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr_FR');
+
+        $user = new User();
+        $user->setEmail('test@test.com');
+        $user->setUsername('test');
+        $user->setPassword('$2y$13$Tg1.AyawGux8ykl.DpBCluOasX7EWXRrwLPcsZg8CzI5w2rxBQ.Bm');
+        $user->setRoles(["ROLE_USER"]);
+        $manager->persist($user);
 
         $genresList = [];
         for ($g = 1; $g <= 10; $g++) {
