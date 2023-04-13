@@ -6,6 +6,7 @@ use Faker\Factory;
 use App\Entity\Book;
 use App\Entity\Genre;
 use App\Entity\Author;
+use App\Entity\Library;
 use App\Entity\User;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -22,6 +23,7 @@ class AppFixtures extends Fixture
         $user->setPassword('$2y$13$Tg1.AyawGux8ykl.DpBCluOasX7EWXRrwLPcsZg8CzI5w2rxBQ.Bm');
         $user->setRoles(["ROLE_USER"]);
         $manager->persist($user);
+
 
         $genresList = [];
         for ($g = 1; $g <= 10; $g++) {
@@ -63,6 +65,12 @@ class AppFixtures extends Fixture
                 $randomGenre = $genresList[mt_rand(0, count($genresList) - 1)];
                 $book->addGenre($randomGenre);
             }
+
+            $library = new Library();
+            $library->setUser($user);
+            $library->setBook($book);
+            $library->setFinished(true);
+            $manager->persist($library);
 
             $manager->persist($book);
         }

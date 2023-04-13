@@ -20,7 +20,7 @@ class Library
     /**
      * @ORM\Column(type="boolean", options={"default": false})
      */
-    private $read;
+    private $finished;
 
     /**
      * @ORM\Column(type="boolean", options={"default": false})
@@ -66,7 +66,7 @@ class Library
 
     public function __construct()
     {
-        $this->read = false;
+        $this->finished = false;
         $this->purchased = false;
         $this->favorite = false;
         $this->wishlist = false; 
@@ -138,17 +138,6 @@ class Library
         return $this;
     }
 
-    public function isRead(): ?bool
-    {
-        return $this->read;
-    }
-
-    public function setRead(bool $read): self
-    {
-        $this->read = $read;
-
-        return $this;
-    }
 
     public function isPurchased(): ?bool
     {
@@ -185,5 +174,19 @@ class Library
 
         return $this;
     }
+
+    public function isFinished(): ?bool
+    {
+        return $this->finished;
+    }
+
+    public function setFinished(bool $finished): self
+    {
+        $this->finished = $finished;
+
+        return $this;
+    }
+
+
 
 }
