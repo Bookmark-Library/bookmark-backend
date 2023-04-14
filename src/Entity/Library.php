@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\LibraryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\LibraryRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=LibraryRepository::class)
@@ -19,36 +20,43 @@ class Library
 
     /**
      * @ORM\Column(type="boolean", options={"default": false})
+     * @Groups({"get_books"})
      */
     private $finished;
 
     /**
      * @ORM\Column(type="boolean", options={"default": false})
+     * @Groups({"get_books"})
      */
     private $purchased;
 
     /**
      * @ORM\Column(type="boolean", options={"default": false})
+     * @Groups({"get_books"})
      */
     private $favorite;
 
     /**
      * @ORM\Column(type="boolean", options={"default": false})
+     * @Groups({"get_books"})
      */
     private $wishlist;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"get_books"})
      */
     private $comment;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"get_books"})
      */
     private $quote;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups({"get_books"})
      */
     private $rate;
 
@@ -61,6 +69,7 @@ class Library
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="libraries")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get_books"})
      */
     private $user;
 
@@ -69,7 +78,7 @@ class Library
         $this->finished = false;
         $this->purchased = false;
         $this->favorite = false;
-        $this->wishlist = false; 
+        $this->wishlist = false;
     }
 
     public function getId(): ?int
@@ -186,7 +195,4 @@ class Library
 
         return $this;
     }
-
-
-
 }

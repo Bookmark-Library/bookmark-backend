@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\BookRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -25,16 +26,19 @@ class Book
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"get_books"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"get_books"})
      */
     private $editor;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"get_books"})
      */
     private $collection;
 
@@ -42,47 +46,56 @@ class Book
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"get_books"})
      */
     private $summary;
 
     /**
      * @ORM\Column(type="string", nullable=true, unique=true)
+     * @Groups({"get_books"})
      */
     private $isbn;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups({"get_books"})
      */
     private $pages;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups({"get_books"})
      */
     private $price;
 
     /**
      * @ORM\Column(type="string", length=2048, nullable=true)
+     * @Groups({"get_books"})
      */
     private $image;
 
     /**
      * @ORM\Column(type="string", length=64, nullable=true)
+     * @Groups({"get_books"})
      */
     private $publicationDate;
 
 
     /**
      * @ORM\ManyToMany(targetEntity=Author::class, mappedBy="books")
+     * @Groups({"get_books"})
      */
     private $authors;
 
     /**
      * @ORM\ManyToMany(targetEntity=Genre::class, mappedBy="books")
+     * @Groups({"get_books"})
      */
     private $genres;
 
     /**
      * @ORM\OneToMany(targetEntity=Library::class, mappedBy="book", orphanRemoval=true)
+     * @Groups({"get_books"})
      */
     private $libraries;
 
