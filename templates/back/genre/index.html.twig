@@ -21,8 +21,8 @@
                 <td>{{ genre.name }}</td>
                 <td>{{ genre.homeOrder }}</td>
                 <td>
-                    <a href="{{ path('app_genre_show', {'id': genre.id}) }}">show</a>
-                    <a href="{{ path('app_genre_edit', {'id': genre.id}) }}">edit</a>
+                    <a href="{{ path('app_back_genre_show', {'id': genre.id}) }}">show</a>
+                    <a href="{{ path('app_back_genre_edit', {'id': genre.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -33,5 +33,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_genre_new') }}">Create new</a>
+    <a href="{{ path('app_back_genre_new') }}">Create new</a>
 {% endblock %}
