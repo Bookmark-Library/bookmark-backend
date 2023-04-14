@@ -1,37 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Genre index{% endblock %}
+{% block title %}Liste des genres
+{% endblock %}
 
 {% block body %}
-    <h1>Genre index</h1>
+	<h1>Liste des genres</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>HomeOrder</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for genre in genres %}
-            <tr>
-                <td>{{ genre.id }}</td>
-                <td>{{ genre.name }}</td>
-                <td>{{ genre.homeOrder }}</td>
-                <td>
-                    <a href="{{ path('app_back_genre_show', {'id': genre.id}) }}">show</a>
-                    <a href="{{ path('app_back_genre_edit', {'id': genre.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+	<a href="{{ path('app_back_genre_new') }}" class="btn btn-success">Créer</a>
 
-    <a href="{{ path('app_back_genre_new') }}">Create new</a>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Nom</th>
+				<th>Ordre Page d'accueil</th>
+				<th>actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for genre in genres %}
+				<tr>
+					<td>{{ genre.id }}</td>
+					<td>{{ genre.name }}</td>
+					<td>{{ genre.homeOrder }}</td>
+					<td>
+						<a href="{{ path('app_back_genre_show', {'id': genre.id}) }}" class="btn btn-primary">Voir</a>
+						<a href="{{ path('app_back_genre_edit', {'id': genre.id}) }}" class="btn btn-warning">Modifier</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="4">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+
 {% endblock %}

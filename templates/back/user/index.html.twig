@@ -5,6 +5,7 @@
 
 {% block body %}
 	<h1>Liste des utilisateurs</h1>
+	<a href="{{ path('app_back_user_new') }}" class="btn btn-success">Créer</a>
 
 	<table class="table">
 		<thead>
@@ -12,7 +13,7 @@
 				<th>Id</th>
 				<th>Email</th>
 				<th>Roles</th>
-				<th>Password</th>
+				<th>Mot de passe</th>
 				<th>Avatar</th>
 				<th>Alias</th>
 				<th>actions</th>
@@ -28,8 +29,8 @@
 					<td>{{ user.avatar }}</td>
 					<td>{{ user.alias }}</td>
 					<td>
-						<a href="{{ path('app_back_user_show', {'id': user.id}) }}">show</a>
-						<a href="{{ path('app_back_user_edit', {'id': user.id}) }}">edit</a>
+						<a href="{{ path('app_back_user_show', {'id': user.id}) }}" class="btn btn-primary">Voir</a>
+						<a href="{{ path('app_back_user_edit', {'id': user.id}) }}" class="btn btn-warning">Modifier</a>
 					</td>
 				</tr>
 			{% else %}
@@ -40,5 +41,5 @@
 		</tbody>
 	</table>
 
-	<a href="{{ path('app_back_user_new') }}">Create new</a>
+
 {% endblock %}
