@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l'ordre en page d'accueil
+{% endblock %}
+
+{% block body %}
+	<h1>Modifier l'ordre en page d'accueil
+	</h1>
+	<div class="row">
+
+		{% for index in 1..4 %}
+			<div class="col">
+				<div class="form-group">
+					<label for="emplacement{{'#'}}">Emplacement #{{ index }}</label>
+
+					<select class="form-control" id="emplacement{{'#'}}" name="emplacement[]">
+						<option value="">Choisissez :</option>
+						{% for genre in genres %}
+
+							<option value="{{ genre.id }}" {% if genre.homeOrder is same as index %} "selected" {% endif %}>
+								{{ genre.name}}
+							</option>
+
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+		{% endfor %}
+
+	</div>
+
+	<a href="{{ path('app_back_genre_index') }}" class="btn btn-primary mt-2">Retour à la liste</a>
+
+{% endblock %}
