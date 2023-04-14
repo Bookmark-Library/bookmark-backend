@@ -81,7 +81,7 @@ class GenreController extends AbstractController
      */
     public function delete(Request $request, Genre $genre, GenreRepository $genreRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$genre->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $genre->getId(), $request->request->get('_token'))) {
             $genreRepository->remove($genre, true);
         }
 
