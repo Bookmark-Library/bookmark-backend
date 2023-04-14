@@ -22,13 +22,13 @@ class Author
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get_books"})
+     * @Groups({"get_books_collection"})
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"get_books"})
+     * @Groups({"get_books_collection"})
      */
     private $firstname;
 

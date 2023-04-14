@@ -12,9 +12,9 @@ class BookController extends AbstractController
     /**
      * Retourne les données en JSON
      * 
-     * @Route("/api/books", name="app_api_get_books", methods={"GET"})
+     * @Route("/api/books", name="app_api_books_get", methods={"GET"})
      */
-    public function getBooks(BookRepository $bookRepository): Response
+    public function getCollection(BookRepository $bookRepository): Response
     {
         $books = $bookRepository->findAll();
 
@@ -27,7 +27,7 @@ class BookController extends AbstractController
             // header
             [],
             // options à transmettre au Serializer
-            ['groups' => 'get_books']
+            ['groups' => 'get_books_collection']
         );
     }
 }

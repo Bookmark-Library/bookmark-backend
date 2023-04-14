@@ -26,19 +26,19 @@ class Book
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get_books"})
+     * @Groups({"get_books_collection"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"get_books"})
+     * @Groups({"get_books_collection"})
      */
     private $editor;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"get_books"})
+     * @Groups({"get_books_collection"})
      */
     private $collection;
 
@@ -46,56 +46,56 @@ class Book
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"get_books"})
+     * @Groups({"get_books_collection"})
      */
     private $summary;
 
     /**
      * @ORM\Column(type="string", nullable=true, unique=true)
-     * @Groups({"get_books"})
+     * @Groups({"get_books_collection"})
      */
     private $isbn;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * @Groups({"get_books"})
+     * @Groups({"get_books_collection"})
      */
     private $pages;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"get_books"})
+     * @Groups({"get_books_collection"})
      */
     private $price;
 
     /**
      * @ORM\Column(type="string", length=2048, nullable=true)
-     * @Groups({"get_books"})
+     * @Groups({"get_books_collection"})
      */
     private $image;
 
     /**
      * @ORM\Column(type="string", length=64, nullable=true)
-     * @Groups({"get_books"})
+     * @Groups({"get_books_collection"})
      */
     private $publicationDate;
 
 
     /**
      * @ORM\ManyToMany(targetEntity=Author::class, mappedBy="books")
-     * @Groups({"get_books"})
+     * @Groups({"get_books_collection"})
      */
     private $authors;
 
     /**
      * @ORM\ManyToMany(targetEntity=Genre::class, mappedBy="books")
-     * @Groups({"get_books"})
+     * @Groups({"get_books_collection"})
      */
     private $genres;
 
     /**
      * @ORM\OneToMany(targetEntity=Library::class, mappedBy="book", orphanRemoval=true)
-     * @Groups({"get_books"})
+     * @Groups({"get_books_collection"})
      */
     private $libraries;
 
