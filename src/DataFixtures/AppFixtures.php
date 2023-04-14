@@ -24,6 +24,12 @@ class AppFixtures extends Fixture
         $user->setRoles(["ROLE_USER"]);
         $manager->persist($user);
 
+        $user = new User();
+        $user->setEmail('admin@admin.com');
+        $user->setAlias('admin');
+        $user->setPassword('$2y$13$vMnkj4LRxWckp/O251JkBueRG8z6nPTwODUI5hT13Sd8TwUqRolbK');
+        $user->setRoles(["ROLE_ADMIN"]);
+        $manager->persist($user);
 
         $genresList = [];
         for ($g = 1; $g <= 10; $g++) {
