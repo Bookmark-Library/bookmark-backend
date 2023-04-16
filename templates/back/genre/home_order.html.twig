@@ -13,13 +13,15 @@
 				<div class="form-group">
 					<label for="emplacement{{'#'}}">Emplacement #{{ index }}</label>
 
-					<select class="form-control" id="emplacement{{'#'}}" name="emplacement[]">
+					<select class="form-control" id="emplacement{{'#'}}">
 						<option value="">Choisissez :</option>
 						{% for genre in genres %}
 
-							<option value="{{ genre.id }}" {% if genre.homeOrder is same as index %} "selected" {% endif %}>
-								{{ genre.name}}
-							</option>
+							{% set selected = '' %}
+							{% if (genre.homeOrder) == index  %}
+								{% set selected = 'selected' %}
+							{% endif %}
+							<option value="{{genre.homeOrder}}" {{ selected }}>{{genre.name}}</option>
 
 						{% endfor %}
 					</select>
