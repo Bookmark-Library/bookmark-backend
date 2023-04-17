@@ -54,6 +54,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Library::class, mappedBy="user", orphanRemoval=true)
+     * @Groups({"get_users_item"})
      */
     private $libraries;
 

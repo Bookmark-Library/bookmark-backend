@@ -35,7 +35,6 @@ security:
             pattern:   ^/api
             stateless: true
 
-
         main:
             lazy: true
             provider: app_user_provider
@@ -56,8 +55,8 @@ security:
     access_control:
         - { path: ^/back, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
-        - { path: ^/api/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: PUBLIC_ACCESS }
 
 when@test:
     security:
