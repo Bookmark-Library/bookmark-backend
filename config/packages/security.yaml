@@ -14,6 +14,28 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        # API login
+        login:
+            # ici on definit le endpoint pour recuperer le token
+            pattern: ^/api/login
+            stateless: true
+            json_login:
+                check_path: /api/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        # Le firewall de notre API => à adapter selon nos besoins
+        api_secure:
+            pattern:   ^/api/secure
+            stateless: true
+            jwt: ~
+        
+        api_public:
+            pattern:   ^/api
+            stateless: true
+
+
         main:
             lazy: true
             provider: app_user_provider
@@ -32,8 +54,10 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-         - { path: ^/back, roles: ROLE_ADMIN }
+        - { path: ^/back, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:
