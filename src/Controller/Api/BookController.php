@@ -27,7 +27,12 @@ class BookController extends AbstractController
             // header
             [],
             // options à transmettre au Serializer
-            ['groups' => 'get_books_collection']
+            ['groups' => [
+                'get_books_collection',
+                'get_authors_collection',
+                'get_genres_collection'
+            ]
+            ]
         );
     }
 }

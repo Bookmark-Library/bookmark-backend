@@ -25,7 +25,16 @@ class UserController extends AbstractController
             $user,
             Response::HTTP_OK,
             [],
-            ['groups' => 'get_users_item', 'get_books_collection']
+            [
+                'groups' => [
+                    'get_users_item',
+                    'get_library_collection',
+                    'get_books_collection',
+                    'get_authors_collection',
+                    'get_genres_collection'
+                    
+                ]
+            ]
         );
     }
 }

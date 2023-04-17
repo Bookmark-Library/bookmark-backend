@@ -20,57 +20,56 @@ class Library
 
     /**
      * @ORM\Column(type="boolean", options={"default": false})
-     * @Groups({"get_books_collection", "get_users_item"})
+     * @Groups({"get_library_collection"})
      */
     private $finished;
 
     /**
      * @ORM\Column(type="boolean", options={"default": false})
-     * @Groups({"get_books_collection", "get_users_item"})
+     * @Groups({"get_library_collection"})
      */
     private $purchased;
 
     /**
      * @ORM\Column(type="boolean", options={"default": false})
-     * @Groups({"get_books_collection", "get_users_item"})
+     * @Groups({"get_library_collection"})
      */
     private $favorite;
 
     /**
      * @ORM\Column(type="boolean", options={"default": false})
-     * @Groups({"get_books_collection", "get_users_item"})
+     * @Groups({"get_library_collection"})
      */
     private $wishlist;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"get_books_collection", "get_users_item"})
+     * @Groups({"get_library_collection"})
      */
     private $comment;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"get_books_collection", "get_users_item"})
+     * @Groups({"get_library_collection"})
      */
     private $quote;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * @Groups({"get_books_collection", "get_users_item"})
+     * @Groups({"get_library_collection"})
      */
     private $rate;
 
     /**
      * @ORM\ManyToOne(targetEntity=Book::class, inversedBy="libraries")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"get_users_item"})
+     * @Groups({"get_library_collection"})
      */
     private $book;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="libraries")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"get_books_collection"})
      */
     private $user;
 
