@@ -22,7 +22,7 @@ class Genre
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get_books_collection"})
+     * @Groups({"get_books_collection", "get_users_item"})
      */
     private $name;
 

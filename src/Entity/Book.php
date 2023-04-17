@@ -21,24 +21,25 @@ class Book
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"get_books_collection", "get_users_item"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get_books_collection"})
+     * @Groups({"get_books_collection", "get_users_item"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"get_books_collection"})
+     * @Groups({"get_books_collection", "get_users_item"})
      */
     private $editor;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"get_books_collection"})
+     * @Groups({"get_books_collection", "get_users_item"})
      */
     private $collection;
 
@@ -46,50 +47,50 @@ class Book
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"get_books_collection"})
+     * @Groups({"get_books_collection", "get_users_item"})
      */
     private $summary;
 
     /**
      * @ORM\Column(type="string", nullable=true, unique=true)
-     * @Groups({"get_books_collection"})
+     * @Groups({"get_books_collection", "get_users_item"})
      */
     private $isbn;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * @Groups({"get_books_collection"})
+     * @Groups({"get_books_collection", "get_users_item"})
      */
     private $pages;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"get_books_collection"})
+     * @Groups({"get_books_collection", "get_users_item"})
      */
     private $price;
 
     /**
      * @ORM\Column(type="string", length=2048, nullable=true)
-     * @Groups({"get_books_collection"})
+     * @Groups({"get_books_collection", "get_users_item"})
      */
     private $image;
 
     /**
      * @ORM\Column(type="string", length=64, nullable=true)
-     * @Groups({"get_books_collection"})
+     * @Groups({"get_books_collection", "get_users_item"})
      */
     private $publicationDate;
 
 
     /**
      * @ORM\ManyToMany(targetEntity=Author::class, mappedBy="books")
-     * @Groups({"get_books_collection"})
+     * @Groups({"get_books_collection", "get_users_item"})
      */
     private $authors;
 
     /**
      * @ORM\ManyToMany(targetEntity=Genre::class, mappedBy="books")
-     * @Groups({"get_books_collection"})
+     * @Groups({"get_books_collection", "get_users_item"})
      */
     private $genres;
 
