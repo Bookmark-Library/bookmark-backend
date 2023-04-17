@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\DataFixtures\Provider\BookmarkProvider;
 use Faker\Factory;
 use App\Entity\Book;
 use App\Entity\Genre;
@@ -43,11 +44,16 @@ class AppFixtures extends Fixture
 
         $faker = Factory::create('fr_FR');
 
+        // Provider
+        $bookmarkProvider = new BookmarkProvider();
+        $faker->addProvider($bookmarkProvider);
+
+        $providerGenres = $bookmarkProvider->allBookGenre();
         $genresList = [];
-        for ($g = 1; $g <= 10; $g++) {
+
+        for ($g = 0; $g < count($providerGenres); $g++) {
             $genre = new Genre();
-            $genre->setName($faker->word());
-            //$genre->setHomeOrder(0);
+            $genre->setName($providerGenres[$g]);
             $genresList[] = $genre;
             $manager->persist($genre);
         }
