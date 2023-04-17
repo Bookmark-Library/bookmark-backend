@@ -65,7 +65,7 @@ class AppFixtures extends Fixture
         $booksList = [];
         for ($b = 1; $b <= 10; $b++) {
             $book = new Book();
-            $book->setTitle($faker->sentence());
+            $book->setTitle($faker->sentence(mt_rand(1, 4)));
             $book->setEditor($faker->country());
             $book->setCollection($faker->city());
             $book->setPublicationDate(($faker->date('Y')));
@@ -97,14 +97,14 @@ class AppFixtures extends Fixture
         $user->setRoles(["ROLE_USER"]);
         $manager->persist($user);
 
-        for ($i=0; $i <= mt_rand(1, 3); $i++) { 
+        for ($i = 0; $i <= mt_rand(1, 3); $i++) {
             $randomBook = $faker->unique()->randomElement($booksList);
             $library = new Library();
             $library->setUser($user);
             $library->setBook($randomBook);
             $library->setComment($faker->text());
             $library->setQuote($faker->text());
-            $library->setRate(mt_rand(0,5));
+            $library->setRate(mt_rand(0, 5));
             $library->setFavorite($faker->boolean());
             $library->setPurchased($faker->boolean());
             $library->setWishlist($faker->boolean());
@@ -119,14 +119,14 @@ class AppFixtures extends Fixture
         $test->setRoles(["ROLE_USER"]);
         $manager->persist($test);
 
-        for ($i=0; $i <= mt_rand(1, 3); $i++) { 
+        for ($i = 0; $i <= mt_rand(1, 3); $i++) {
             $randomBook = $faker->unique()->randomElement($booksList);
             $library = new Library();
             $library->setUser($test);
             $library->setBook($randomBook);
             $library->setComment($faker->text());
             $library->setQuote($faker->text());
-            $library->setRate(mt_rand(0,5));
+            $library->setRate(mt_rand(0, 5));
             $library->setFavorite($faker->boolean());
             $library->setPurchased($faker->boolean());
             $library->setWishlist($faker->boolean());
