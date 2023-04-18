@@ -53,7 +53,7 @@
 						<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 							<li class="nav-item dropdown">
 								<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-									<span>{{ app.user.alias}}</span>
+									<span>{{ app.user.alias }}</span>
 									<i class="bi bi-person-square"></i>
 								</a>
 								<ul class="dropdown-menu">
@@ -61,7 +61,7 @@
 										<h6 class="dropdown-header">
 											{% if is_granted("ROLE_ADMIN") %}
 												Administrateur
-											{% elseif is_granted("ROLE_MANAGER") %}
+											{% elseif is_granted("ROLE_EDITOR") %}
 												Rédacteur
 											{% endif %}
 										</h6>

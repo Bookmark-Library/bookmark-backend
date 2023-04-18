@@ -53,12 +53,14 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/back, roles: ROLE_ADMIN }
+        - { path: ^/back/user, roles: ROLE_ADMIN }
+        - { path: ^/back, roles: ROLE_EDITOR }
         - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: PUBLIC_ACCESS }
 
     role_hierarchy:
-        ROLE_ADMIN: ROLE_USER
+        ROLE_EDITOR: ROLE_USER
+        ROLE_ADMIN: ROLE_EDITOR
         
 when@test:
     security:
