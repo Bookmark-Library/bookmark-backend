@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\Book;
 use App\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,4 +36,31 @@ class BookController extends AbstractController
             ]
         );
     }
+
+    /**
+     * @Route("/api/books/{id<\d+>}", name="app_api_books_get_item")
+     */
+    public function getItem(Book $book = null)
+    {
+        if ($book === null) {
+            return $this->json(
+                ['error' => 'Livre non trouvé !'],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        return $this->json(
+            $book,
+            Response::HTTP_OK,
+            [],
+            [
+                'groups' => [
+                    'get_books_collection',
+                    'get_authors_collection',
+                    'get_genres_collection'
+                ]
+            ]
+        );
+    }
+
 }

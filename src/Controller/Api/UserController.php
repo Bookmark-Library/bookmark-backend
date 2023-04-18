@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/api/users/{id<\d+>}", name="app_api_user_get_item")
+     * @Route("/api/users/{id<\d+>}", name="app_api_users_get_item")
      */
     public function getItem(User $user = null)
     {
