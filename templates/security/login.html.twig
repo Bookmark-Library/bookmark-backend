@@ -2,7 +2,17 @@
 
 {% block title %}Connexion
 {% endblock %}
+{% block nav %}
+	<nav class="navbar navbar-expand-lg navbar-light ">
+		<div class="container-fluid">
+			<a href="#" class="d-flex align-items-center mb-2 mb-lg-0 text-decoration-none header-logo">
+				<img src="{{asset('assets/images/bookmark-logo.svg')}}" height="70" alt="Logo BookMark">
 
+			</a>
+		</div>
+	</nav>
+
+{% endblock %}
 {% block body %}
 	<form method="post">
 		{% if error %}
@@ -11,7 +21,8 @@
 
 		{% if app.user %}
 			<div class="mb-3">
-				Vous êtes connecté en tant que {{ app.user.userIdentifier }},
+				Vous êtes connecté en tant que
+				{{ app.user.userIdentifier }},
 				<a href="{{ path('app_logout') }}">Déconnexion</a>
 			</div>
 		{% endif %}
@@ -26,15 +37,15 @@
 		type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
 		{#
-								        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-								        See https://symfony.com/doc/current/security/remember_me.html
-								
-								        <div class="checkbox mb-3">
-								            <label>
-								                <input type="checkbox" name="_remember_me"> Remember me
-								            </label>
-								        </div>
-								    #}
+        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+        See https://symfony.com/doc/current/security/remember_me.html
+
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" name="_remember_me"> Remember me
+            </label>
+        </div>
+        #}
 
 		<button class="btn btn-lg btn-primary mt-2" type="submit">
 			Se connecter
