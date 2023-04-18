@@ -10,10 +10,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/api/users/{id<\d+>}", name="app_api_users_get_item")
+     * @Route("/api/users/", name="app_api_users_get_item")
      */
-    public function getItem(User $user = null)
+    public function getItem()
     {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
         if ($user === null) {
             return $this->json(
                 ['error' => 'Utilisateur non trouvé !'],
@@ -21,6 +24,7 @@ class UserController extends AbstractController
             );
         }
 
+    //$libraries = $user->getLibraries();
         return $this->json(
             $user,
             Response::HTTP_OK,

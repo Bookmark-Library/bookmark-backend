@@ -26,14 +26,15 @@ security:
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
         # Le firewall de notre API => à adapter selon nos besoins
-        api_secure:
-            pattern:   ^/api/secure
-            stateless: true
-            jwt: ~
+        #api_secure:
+        #    pattern:   ^/api/secure
+        #    stateless: true
+        #    jwt: ~
         
         api_public:
             pattern:   ^/api
             stateless: true
+            jwt: ~
 
         main:
             lazy: true
@@ -56,7 +57,7 @@ security:
         - { path: ^/back/user, roles: ROLE_ADMIN }
         - { path: ^/back, roles: ROLE_EDITOR }
         - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
-        - { path: ^/api, roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
     role_hierarchy:
         ROLE_EDITOR: ROLE_USER
