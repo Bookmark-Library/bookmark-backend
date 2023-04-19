@@ -21,10 +21,13 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email', EmailType::class,
-            [
-                'label' => "Courriel"
-            ])
+            ->add(
+                'email',
+                EmailType::class,
+                [
+                    'label' => "Courriel"
+                ]
+            )
             ->add('roles', ChoiceType::class, [
                 'choices' => [
                     'Utilisateur' => 'ROLE_USER',
@@ -39,7 +42,7 @@ class UserType extends AbstractType
                 ],
             ])
 
-            ->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
                 // On récupère le form depuis l'event (pour travailler avec)
                 $form = $event->getForm();
                 // On récupère le user mappé sur le form depuis l'event
@@ -55,9 +58,10 @@ class UserType extends AbstractType
                             'placeholder' => 'Laissez vide si inchangé'
                         ],
                         'constraints' => [
-                            new Regex('/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-+]).{8,}$/', 
-                            "Le mot de passe doit contenir au minimum 8 caractères, une majuscule, un chiffre et un caractère spécial"
-                        ), 
+                            new Regex(
+                                '/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-+]).{8,}$/',
+                                "Le mot de passe doit contenir au minimum 8 caractères, une majuscule, un chiffre et un caractère spécial"
+                            ),
                         ],
 
                     ]);
@@ -69,10 +73,11 @@ class UserType extends AbstractType
                         // On déplace les contraintes de l'entité vers le form d'ajout
                         'constraints' => [
                             new NotBlank(),
-                            new Regex('/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-+]).{8,}$/', 
-                            "Le mot de passe doit contenir au minimum 8 caractères, une majuscule, un chiffre et un caractère spécial"
-                        ), 
-                           
+                            new Regex(
+                                '/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-+]).{8,}$/',
+                                "Le mot de passe doit contenir au minimum 8 caractères, une majuscule, un chiffre et un caractère spécial"
+                            ),
+
                         ],
 
                     ]);
@@ -80,8 +85,7 @@ class UserType extends AbstractType
             })
 
             ->add('alias', TextType::class)
-            ->add('avatar', FileType::class)
-        ;
+            ->add('avatar', TextType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
