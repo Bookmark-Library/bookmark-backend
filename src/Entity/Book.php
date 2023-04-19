@@ -81,7 +81,7 @@ class Book
 
 
     /**
-     * @ORM\ManyToMany(targetEntity=Author::class, mappedBy="books")
+     * @ORM\ManyToMany(targetEntity=Author::class, mappedBy="books", cascade={"persist"})
      * @Groups({"get_books_collection"})
      */
     private $authors;

@@ -34,6 +34,7 @@ class Author
 
     /**
      * @ORM\ManyToMany(targetEntity=Book::class, inversedBy="authors")
+     * 
      */
     private $books;
 
