@@ -7,28 +7,34 @@
 	<h1>Modifier l'ordre en page d'accueil
 	</h1>
 	<div class="row">
+		<form action="" method="post">
 
-		{% for index in 1..4 %}
-			<div class="col">
-				<div class="form-group">
-					<label for="emplacement{{'#'}}">Emplacement #{{ index }}</label>
+			<div class="row">
+				{% for index in 1..4 %}
+					<div class="form-group col">
+						<label for="emplacement{{index}}">Emplacement #{{ index }}</label>
 
-					<select class="form-control" id="emplacement{{'#'}}">
-						<option value="">Choisissez :</option>
-						{% for genre in genres %}
+						<select class="form-control" id="emplacement{{index}}" name="{{index}}">
+							<option value="0">Choisissez :</option>
 
-							{% set selected = '' %}
-							{% if (genre.homeOrder) == index  %}
-								{% set selected = 'selected' %}
-							{% endif %}
-							<option value="{{genre.homeOrder}}" {{ selected }}>{{genre.name}}</option>
+							{% for genre in genres %}
 
-						{% endfor %}
-					</select>
-				</div>
+								{% set selected = '' %}
+								{% if (genre.homeOrder) == index  %}
+									{% set selected = 'selected' %}
+								{% endif %}
+
+								<option value="{{ genre.id }}" {{ selected }}>{{ genre.name }}</option>
+
+							{% endfor %}
+
+						</select>
+					</div>
+				{% endfor %}
 			</div>
-		{% endfor %}
 
+			<button type="submit" class="btn btn-success mt-2">Ajouter</button>
+		</form>
 	</div>
 
 	<a href="{{ path('app_back_genre_index') }}" class="btn btn-primary mt-2">Retour à la liste</a>

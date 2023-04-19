@@ -49,8 +49,23 @@ class GenreController extends AbstractController
     /**
      * @Route("/home-order", name="app_back_genre_home_order", methods={"GET", "POST"})
      */
-    public function homeOrder(GenreRepository $genreRepository): Response
+    public function homeOrder(GenreRepository $genreRepository, Request $request): Response
     {
+        if ($request->isMethod('POST')) {
+
+            $genres = $genreRepository->findAll();
+            foreach ($genres as $genre) {
+                $genre->setHomeOrder(0);
+            }
+
+            for ($i = 1; $i <= 4; $i++) {
+                $genre = $genreRepository->find($request->request->get($i));
+                $genre->setHomeOrder($i);
+                $genreRepository->add($genre, true);
+            }
+            return $this->redirectToRoute('app_back_genre_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         return $this->render('back/genre/home_order.html.twig', [
             'genres' => $genreRepository->findAll(),
         ]);
