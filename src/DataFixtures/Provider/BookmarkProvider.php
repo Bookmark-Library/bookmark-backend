@@ -4,30 +4,59 @@ namespace App\DataFixtures\Provider;
 
 class BookmarkProvider
 {
-    // 80 genres
     private $genres = [
-        'Romans',
-        'Romans Poche',
-        'Polar & Thriller',
-        'Fantasy & SF',
-        'BD & Humour',
-        'Manga',
-        'Ados & Young adults',
-        'Livres enfants',
-        'Actualité Média et Société',
-        'Dictionnaires & Langues',
-        'Sciences Humaines',
+        'Animaux',
+        'Art',
+        'Aventure',
+        'Bande Dessinée',
+        'Biographie',
+        'Cinéma',
+        'Comédie',
+        'Conte',
+        'Cuisine',
+        'Dictionnaires & encyclopédies',
+        'Drame',
+        'Épistolaires',
+        'Essai',
+        'Fable',
+        'Fantastique',
+        'Fantasy',
+        'Fiction',
+        'Géographie',
         'Histoire',
-        'Entreprise, Management',
-        'Poésie & Théâtre',
-        'Art, Cinéma & Musique',
-        'Tourisme & Voyages',
+        'Horreur',
+        'Humour',
+        'Langues',
+        'Livres en langues étrangères',
+        'Livre Audio',
+        'Livre pour enfants',
+        'Loisirs',
+        'Management',
+        'Manga',
+        'Médias & Société',
+        'Merveilleux',
+        'Musique',
+        'Mystère',
+        'Nature',
+        'Nouvelle',
+        'Philosophie',
+        'Poésie',
+        'Polar',
+        'Psychologie',
+        'Religions',
+        'Roman',
+        'Romance',
         'Santé & Bien-être',
-        'Cuisine & Vins',
-        'Sports & Loisirs',
-        'Nature, Animaux & Jardin',
-        'Livres anglais & étrangers',
-        'Livre Audio'
+        'Sciences',
+        'Science Fiction',
+        'Sciences Humaines',
+        'Sports',
+        'Technologies',
+        'Théâtre',
+        'Tragédie',
+        'Thriller',
+        'Voyage',
+        'Young adults'
     ];
 
     /**
@@ -45,5 +74,4 @@ class BookmarkProvider
     {
         return $this->genres;
     }
-
 }
