@@ -59,7 +59,7 @@ class AppFixtures extends Fixture
         }
 
         $authorsList = [];
-        for ($a = 1; $a <= 10; $a++) {
+        for ($a = 1; $a <= 15; $a++) {
             $author = new Author();
             $author->setLastname($faker->lastName());
             $author->setFirstname($faker->firstName());
@@ -69,7 +69,7 @@ class AppFixtures extends Fixture
         }
 
         $booksList = [];
-        for ($b = 1; $b <= 10; $b++) {
+        for ($b = 1; $b <= 25; $b++) {
             $book = new Book();
             $book->setTitle($faker->sentence(mt_rand(1, 4)));
             $book->setEditor($faker->country());
@@ -103,7 +103,7 @@ class AppFixtures extends Fixture
         $user->setRoles(["ROLE_USER"]);
         $manager->persist($user);
 
-        for ($i = 0; $i <= mt_rand(1, 3); $i++) {
+        for ($i = 0; $i <= 7; $i++) {
             $randomBook = $faker->unique()->randomElement($booksList);
             $library = new Library();
             $library->setUser($user);
@@ -125,10 +125,32 @@ class AppFixtures extends Fixture
         $test->setRoles(["ROLE_USER"]);
         $manager->persist($test);
 
-        for ($i = 0; $i <= mt_rand(1, 3); $i++) {
+        for ($i = 0; $i <= 7; $i++) {
             $randomBook = $faker->unique()->randomElement($booksList);
             $library = new Library();
             $library->setUser($test);
+            $library->setBook($randomBook);
+            $library->setComment($faker->text());
+            $library->setQuote($faker->text());
+            $library->setRate(mt_rand(0, 5));
+            $library->setFavorite($faker->boolean());
+            $library->setPurchased($faker->boolean());
+            $library->setWishlist($faker->boolean());
+            $library->setFinished($faker->boolean());
+            $manager->persist($library);
+        }
+
+        $kenny = new User();
+        $kenny->setEmail('kenny@kenny.com');
+        $kenny->setAlias('kenny');
+        $kenny->setPassword('$2y$13$s9B6BDb4IiTFK7HIHoVIGeMOENvnRwr/NCmAGaV.kXyjJ6zQxiJVy');
+        $kenny->setRoles(["ROLE_USER"]);
+        $manager->persist($kenny);
+
+        for ($i = 0; $i <= 7; $i++) {
+            $randomBook = $faker->unique()->randomElement($booksList);
+            $library = new Library();
+            $library->setUser($kenny);
             $library->setBook($randomBook);
             $library->setComment($faker->text());
             $library->setQuote($faker->text());
