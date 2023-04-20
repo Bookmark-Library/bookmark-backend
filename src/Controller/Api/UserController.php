@@ -3,9 +3,15 @@
 namespace App\Controller\Api;
 
 use App\Entity\User;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
 {
@@ -41,4 +47,56 @@ class UserController extends AbstractController
             ]
         );
     }
+
+    /**
+     * Create user item
+     * 
+     * @Route("/api/users", name="app_api_users_post", methods={"POST"})
+     */
+    public function createItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher)
+    {
+        $jsonContent = $request->getContent();
+
+        try {
+            $user = $serializer->deserialize($jsonContent, User::class, 'json');
+        } catch (NotEncodableValueException $e) {
+            return $this->json(
+                ['error' => 'JSON invalide'],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
+        $errors = $validator->validate($user);
+
+        if (count($errors) > 0) {
+            $errorsClean = [];
+            // @Retourner des erreurs de validation propres
+            /** @var ConstraintViolation $error */
+            foreach ($errors as $error) {
+                $errorsClean[$error->getPropertyPath()][] = $error->getMessage();
+            };
+
+            return $this->json($errorsClean, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // Password hashed
+        $hashedPassword = $userPasswordHasher->hashPassword($user, $user->getPassword());
+        $user->setPassword($hashedPassword);
+        
+        $entityManager = $doctrine->getManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $this->json(
+            $user,
+            Response::HTTP_CREATED,
+            [
+                'Location' => $this->generateUrl('app_api_users_get_item', ['id' => $user->getId()])
+            ],
+            ['groups' => [
+                'get_users_item'
+            ]]
+        );
+    }
+
 }
