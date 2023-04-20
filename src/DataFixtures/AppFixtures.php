@@ -162,6 +162,13 @@ class AppFixtures extends Fixture
             $manager->persist($library);
         }
 
+        $editor = new User();
+        $editor->setEmail('editor@editor.com');
+        $editor->setAlias('editor');
+        $editor->setPassword('$2y$13$AhHpIRbtx5PLrjjN/uTHjetL9sPlEnmHbh0tdXbU37OpQez55gkby');
+        $editor->setRoles(["ROLE_EDITOR"]);
+        $manager->persist($editor);
+
         $admin = new User();
         $admin->setEmail('admin@admin.com');
         $admin->setAlias('admin');
