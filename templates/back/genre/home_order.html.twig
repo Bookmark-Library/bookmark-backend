@@ -6,36 +6,8 @@
 {% block body %}
 	<h1>Modifier l'ordre en page d'accueil
 	</h1>
-	<div class="row">
-		<form action="" method="post">
 
-			<div class="row">
-				{% for index in 1..4 %}
-					<div class="form-group col">
-						<label for="emplacement{{index}}">Emplacement #{{ index }}</label>
-
-						<select class="form-control" id="emplacement{{index}}" name="{{index}}">
-							<option value="0">Choisissez :</option>
-
-							{% for genre in genres %}
-
-								{% set selected = '' %}
-								{% if (genre.homeOrder) == index  %}
-									{% set selected = 'selected' %}
-								{% endif %}
-
-								<option value="{{ genre.id }}" {{ selected }}>{{ genre.name }}</option>
-
-							{% endfor %}
-
-						</select>
-					</div>
-				{% endfor %}
-			</div>
-
-			<button type="submit" class="btn btn-success mt-2">Enregistrer</button>
-		</form>
-	</div>
+	{{ include('back/genre/_home_order_form.html.twig') }}
 
 	<a href="{{ path('app_back_genre_index') }}" class="btn btn-primary mt-2">Retour à la liste</a>
 
