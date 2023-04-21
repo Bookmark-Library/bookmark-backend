@@ -105,7 +105,7 @@ class LibraryController extends AbstractController
             $library,
             Response::HTTP_CREATED,
             [
-                'Location' => $this->generateUrl('app_api_libraries_get_collection', ['id' => $user->getId()])
+                'Location' => $this->generateUrl('app_api_libraries_get_collection')
             ],
             ['groups' => [
                 'get_users_item',
@@ -120,75 +120,9 @@ class LibraryController extends AbstractController
     /**
      * Update library item
      * 
-     * @Route("/api/libraries", name="app_api_libraries_update", methods={"PUT"})
+     * @Route("/api/libraries/{id<\d+>}", name="app_api_libraries_update", methods={"PUT"})
      */
-    //public function updateItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator)
-    //{
-    /* /*  /** @var \App\Entity\User $connectedUser */
-    /* $connectedUser = $this->getUser();
-
-        if ($connectedUser === null) {
-            return $this->json(
-                ['error' => 'Utilisateur non trouvé !'],
-                Response::HTTP_NOT_FOUND
-            );
-        }
-
-        $jsonContent = $request->getContent();
-
-        try {
-            $library = $serializer->deserialize($jsonContent, Library::class, 'json');
-        } catch (NotEncodableValueException $e) {
-            return $this->json(
-                ['error' => 'JSON invalide'],
-                Response::HTTP_UNPROCESSABLE_ENTITY
-            );
-        }
-
-        $errors = $validator->validate($library);
-
-        if (count($errors) > 0) {
-            $errorsClean = [];
-            // @Retourner des erreurs de validation propres
-          /** @var ConstraintViolation $error */
-    /*  foreach ($errors as $error) {
-                $errorsClean[$error->getPropertyPath()][] = $error->getMessage();
-            };
-
-            return $this->json($errorsClean, Response::HTTP_UNPROCESSABLE_ENTITY);  */
-    //} */
-
-    // Update connected User
-    /*         $connectedUser->setEmail($user->getEmail());
-        $connectedUser->setAlias($user->getAlias());
-        $connectedUser->setAvatar($user->getAvatar());
-        $connectedUser->setPassword($user->getPassword());
-
-        $entityManager = $doctrine->getManager();
-        $entityManager->persist($connectedUser);
-        $entityManager->flush();
-
-        return $this->json(
-            $connectedUser,
-            Response::HTTP_OK,
-            [
-                'Location' => $this->generateUrl('app_api_users_get_item', ['id' => $connectedUser->getId()])
-            ],
-            ['groups' => [
-                'get_users_item'
-            ]]
-        ); */
-    //}
-
-
-
-
-    /**
-     * Delete library item
-     * 
-     * @Route("/api/libraries", name="app_api_libraries_delete", methods={"DELETE"})
-     */
-    public function deleteItem(Request $request, LibraryRepository $libraryRepository)
+    public function updateItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, Library $library)
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
@@ -200,10 +134,76 @@ class LibraryController extends AbstractController
             );
         }
 
-        // Getting Library
-        $library = json_decode($request->getContent(), true);
-        $libraryId = $library["id"];
-        $library = $libraryRepository->find($libraryId);
+        $jsonContent = $request->getContent();
+
+        try {
+            $newLibrary = $serializer->deserialize($jsonContent, Library::class, 'json');
+        } catch (NotEncodableValueException $e) {
+            return $this->json(
+                ['error' => 'JSON invalide'],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
+        $errors = $validator->validate($library);
+
+        if (count($errors) > 0) {
+            $errorsClean = [];
+            /** @var ConstraintViolation $error */
+            foreach ($errors as $error) {
+                $errorsClean[$error->getPropertyPath()][] = $error->getMessage();
+            };
+
+            return $this->json($errorsClean, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+
+        $library->setComment($newLibrary->getComment());
+        $library->setFavorite($newLibrary->isFavorite());
+        $library->setFinished($newLibrary->isFinished());
+        $library->setPurchased($newLibrary->isPurchased());
+        $library->setQuote($newLibrary->getQuote());
+        $library->setRate($newLibrary->getRate());
+        $library->setWishlist($newLibrary->isWishlist());
+
+
+        $entityManager = $doctrine->getManager();
+        $entityManager->persist($library);
+        $entityManager->flush();
+
+        return $this->json(
+            $library,
+            Response::HTTP_OK,
+            [
+                'Location' => $this->generateUrl('app_api_users_get_item')
+            ],
+            ['groups' => [
+                'get_users_item',
+                'get_library_collection',
+                'get_books_collection',
+                'get_authors_collection',
+                'get_genres_collection'
+            ]]
+        );
+    }
+
+
+    /**
+     * Delete library item
+     * 
+     * @Route("/api/libraries/{id<\d+>}", name="app_api_libraries_delete", methods={"DELETE"})
+     */
+    public function deleteItem(Request $request, LibraryRepository $libraryRepository, Library $library)
+    {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        if ($user === null) {
+            return $this->json(
+                ['error' => 'Utilisateur non trouvé !'],
+                Response::HTTP_NOT_FOUND
+            );
+        }
 
         $libraryRepository->remove($library, true);
 

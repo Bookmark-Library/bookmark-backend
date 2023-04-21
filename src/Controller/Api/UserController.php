@@ -86,7 +86,7 @@ class UserController extends AbstractController
             $user,
             Response::HTTP_CREATED,
             [
-                'Location' => $this->generateUrl('app_api_users_get_item', ['id' => $user->getId()])
+                'Location' => $this->generateUrl('app_api_users_get_item')
             ],
             ['groups' => [
                 'get_users_item'
@@ -155,7 +155,7 @@ class UserController extends AbstractController
             $connectedUser,
             Response::HTTP_OK,
             [
-                'Location' => $this->generateUrl('app_api_users_get_item', ['id' => $connectedUser->getId()])
+                'Location' => $this->generateUrl('app_api_users_get_item')
             ],
             ['groups' => [
                 'get_users_item'
