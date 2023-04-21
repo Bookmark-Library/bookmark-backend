@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +31,7 @@ class UserController extends AbstractController
             );
         }
 
-    //$libraries = $user->getLibraries();
+        //$libraries = $user->getLibraries();
         return $this->json(
             $user,
             Response::HTTP_OK,
@@ -42,7 +43,7 @@ class UserController extends AbstractController
                     'get_books_collection',
                     'get_authors_collection',
                     'get_genres_collection'
-                    
+
                 ]
             ]
         );
@@ -54,6 +55,67 @@ class UserController extends AbstractController
      * @Route("/api/users", name="app_api_users_post", methods={"POST"})
      */
     public function createItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher)
+    {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        if ($user === null) {
+            return $this->json(
+                ['error' => 'Utilisateur non trouvé !'],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $jsonContent = $request->getContent();
+
+        try {
+            $user = $serializer->deserialize($jsonContent, User::class, 'json');
+        } catch (NotEncodableValueException $e) {
+            return $this->json(
+                ['error' => 'JSON invalide'],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
+        $errors = $validator->validate($user);
+
+        if (count($errors) > 0) {
+            $errorsClean = [];
+            // @Retourner des erreurs de validation propres
+            /** @var ConstraintViolation $error */
+            foreach ($errors as $error) {
+                $errorsClean[$error->getPropertyPath()][] = $error->getMessage();
+            };
+
+            return $this->json($errorsClean, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // Password hashed
+        $hashedPassword = $userPasswordHasher->hashPassword($user, $user->getPassword());
+        $user->setPassword($hashedPassword);
+
+        $entityManager = $doctrine->getManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $this->json(
+            $user,
+            Response::HTTP_CREATED,
+            [
+                'Location' => $this->generateUrl('app_api_users_get_item', ['id' => $user->getId()])
+            ],
+            ['groups' => [
+                'get_users_item'
+            ]]
+        );
+    }
+
+    /**
+     * Update user item
+     * 
+     * @Route("/api/users", name="app_api_users_update", methods={"UPDATE"})
+     */
+    public function updateItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher)
     {
         $jsonContent = $request->getContent();
 
@@ -82,7 +144,11 @@ class UserController extends AbstractController
         // Password hashed
         $hashedPassword = $userPasswordHasher->hashPassword($user, $user->getPassword());
         $user->setPassword($hashedPassword);
-        
+
+
+        //$userRepository->add($user, true);
+
+
         $entityManager = $doctrine->getManager();
         $entityManager->persist($user);
         $entityManager->flush();
@@ -99,4 +165,30 @@ class UserController extends AbstractController
         );
     }
 
+    /**
+     * Delete user item
+     * 
+     * @Route("/api/users", name="app_api_users_delete", methods={"DELETE"})
+     */
+    public function deleteItem(UserRepository $userRepository)
+    {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        if ($user === null) {
+            return $this->json(
+                ['error' => 'Utilisateur non trouvé !'],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $userRepository->remove($user, true);
+
+        return $this->json(
+            $user,
+            Response::HTTP_NO_CONTENT,
+            [],
+            [],
+        );
+    }
 }
