@@ -56,16 +56,6 @@ class UserController extends AbstractController
      */
     public function createItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher)
     {
-        /** @var \App\Entity\User $user */
-        $user = $this->getUser();
-
-        if ($user === null) {
-            return $this->json(
-                ['error' => 'Utilisateur non trouvé !'],
-                Response::HTTP_NOT_FOUND
-            );
-        }
-
         $jsonContent = $request->getContent();
 
         try {
@@ -113,10 +103,20 @@ class UserController extends AbstractController
     /**
      * Update user item
      * 
-     * @Route("/api/users", name="app_api_users_update", methods={"UPDATE"})
+     * @Route("/api/users", name="app_api_users_update", methods={"PUT"})
      */
     public function updateItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher)
     {
+        /** @var \App\Entity\User $connectedUser */
+        $connectedUser = $this->getUser();
+
+        if ($connectedUser === null) {
+            return $this->json(
+                ['error' => 'Utilisateur non trouvé !'],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
         $jsonContent = $request->getContent();
 
         try {
@@ -142,22 +142,26 @@ class UserController extends AbstractController
         }
 
         // Password hashed
-        $hashedPassword = $userPasswordHasher->hashPassword($user, $user->getPassword());
-        $user->setPassword($hashedPassword);
+        if ($user->getPassword()) {
+            $hashedPassword = $userPasswordHasher->hashPassword($user, $user->getPassword());
+            $user->setPassword($hashedPassword);
+        }
 
-
-        //$userRepository->add($user, true);
-
+        // Update connected User
+        $connectedUser->setEmail($user->getEmail());
+        $connectedUser->setAlias($user->getAlias());
+        $connectedUser->setAvatar($user->getAvatar());
+        $connectedUser->setPassword($user->getPassword());
 
         $entityManager = $doctrine->getManager();
-        $entityManager->persist($user);
+        $entityManager->persist($connectedUser);
         $entityManager->flush();
 
         return $this->json(
-            $user,
-            Response::HTTP_CREATED,
+            $connectedUser,
+            Response::HTTP_OK,
             [
-                'Location' => $this->generateUrl('app_api_users_get_item', ['id' => $user->getId()])
+                'Location' => $this->generateUrl('app_api_users_get_item', ['id' => $connectedUser->getId()])
             ],
             ['groups' => [
                 'get_users_item'
