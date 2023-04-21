@@ -31,7 +31,6 @@ class UserController extends AbstractController
             );
         }
 
-        //$libraries = $user->getLibraries();
         return $this->json(
             $user,
             Response::HTTP_OK,
@@ -39,11 +38,6 @@ class UserController extends AbstractController
             [
                 'groups' => [
                     'get_users_item',
-                    'get_library_collection',
-                    'get_books_collection',
-                    'get_authors_collection',
-                    'get_genres_collection'
-
                 ]
             ]
         );
