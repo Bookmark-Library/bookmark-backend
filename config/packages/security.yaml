@@ -57,6 +57,7 @@ security:
         - { path: ^/back/user, roles: ROLE_ADMIN }
         - { path: ^/back, roles: ROLE_EDITOR }
         - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
+        - { path: ^/api/users, roles: PUBLIC_ACCESS, methods: [POST] }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
     role_hierarchy:
