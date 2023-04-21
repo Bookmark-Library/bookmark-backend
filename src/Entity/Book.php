@@ -93,7 +93,7 @@ class Book
     private $genres;
 
     /**
-     * @ORM\OneToMany(targetEntity=Library::class, mappedBy="book", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Library::class, mappedBy="book", orphanRemoval=true, cascade={"persist"})
      */
     private $libraries;
 

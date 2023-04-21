@@ -15,6 +15,7 @@ class Library
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"get_library_collection"})
      */
     private $id;
 
