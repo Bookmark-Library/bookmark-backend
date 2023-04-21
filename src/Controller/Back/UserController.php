@@ -42,6 +42,8 @@ class UserController extends AbstractController
 
             $userRepository->add($user, true);
 
+            $this->addFlash('success', "L'utilisateur <b>{$user->getAlias()}</b> a bien été ajouté.");
+
             return $this->redirectToRoute('app_back_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -81,6 +83,8 @@ class UserController extends AbstractController
 
             $userRepository->add($user, true);
 
+            $this->addFlash('warning', "L'utilisateur <b>{$user->getAlias()}</b> a bien été modifié.");
+
             return $this->redirectToRoute('app_back_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -97,6 +101,7 @@ class UserController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $userRepository->remove($user, true);
+            $this->addFlash('danger', "L'utilisateur <b>{$user->getAlias()}</b> a bien été supprimé.");
         }
 
         return $this->redirectToRoute('app_back_user_index', [], Response::HTTP_SEE_OTHER);

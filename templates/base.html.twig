@@ -15,7 +15,8 @@
 			{% endblock %}
 		</title>
 		<!-- favicon -->
-        <link rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
+		<link
+		rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
 		{# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
@@ -30,7 +31,7 @@
 		<!-- Nav -->
 		{% block nav %}
 
-			<nav class="navbar navbar-expand-lg navbar-light ">
+			<nav class="navbar navbar-expand-lg navbar-light">
 				<div class="container-fluid">
 					<a href="#" class="d-flex align-items-center mb-2 mb-lg-0 text-decoration-none header-logo">
 						<img src="{{asset('assets/images/bookmark-logo.svg')}}" height="70" alt="Logo BookMark">

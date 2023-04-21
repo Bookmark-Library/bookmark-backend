@@ -7,6 +7,8 @@
 	<h1>Liste des utilisateurs</h1>
 	<a href="{{ path('app_back_user_new') }}" class="btn btn-success">Créer</a>
 
+	{{ include('_flash_messages.html.twig') }}
+
 	<table class="table">
 		<thead>
 			<tr>

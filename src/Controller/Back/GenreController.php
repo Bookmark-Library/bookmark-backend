@@ -37,6 +37,8 @@ class GenreController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $genreRepository->add($genre, true);
 
+            $this->addFlash('success', "Le genre <b>{$genre->getName()}</b> a bien été ajouté.");
+
             return $this->redirectToRoute('app_back_genre_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -92,6 +94,8 @@ class GenreController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $genreRepository->add($genre, true);
 
+            $this->addFlash('warning', "Le genre <b>{$genre->getName()}</b> a bien été modifié.");
+
             return $this->redirectToRoute('app_back_genre_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -108,6 +112,7 @@ class GenreController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $genre->getId(), $request->request->get('_token'))) {
             $genreRepository->remove($genre, true);
+            $this->addFlash('danger', "Le genre <b>{$genre->getName()}</b> a bien été supprimé.");
         }
 
         return $this->redirectToRoute('app_back_genre_index', [], Response::HTTP_SEE_OTHER);
