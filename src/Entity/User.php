@@ -40,6 +40,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\Regex(
+     *     pattern="/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-+]).{8,}$/",
+     *     message="Le mot de passe doit contenir au minimum 8 caractères, une majuscule, un chiffre et un caractère spécial")
      */
     private $password;
 

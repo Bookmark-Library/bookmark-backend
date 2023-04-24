@@ -135,17 +135,10 @@ class UserController extends AbstractController
             return $this->json($errorsClean, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        // Password hashed
-        if ($user->getPassword()) {
-            $hashedPassword = $userPasswordHasher->hashPassword($user, $user->getPassword());
-            $user->setPassword($hashedPassword);
-        }
-
         // Update connected User
         $connectedUser->setEmail($user->getEmail());
         $connectedUser->setAlias($user->getAlias());
         $connectedUser->setAvatar($user->getAvatar());
-        $connectedUser->setPassword($user->getPassword());
 
         $entityManager = $doctrine->getManager();
         $entityManager->persist($connectedUser);
@@ -162,6 +155,72 @@ class UserController extends AbstractController
             ]]
         );
     }
+
+     /**
+     * Update user's password
+     * 
+     * @Route("/api/users/password", name="app_api_users_password_update", methods={"PUT"})
+     */
+    public function updatePAssword(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher)
+    {
+        /** @var \App\Entity\User $connectedUser */
+        $connectedUser = $this->getUser();
+
+        if ($connectedUser === null) {
+            return $this->json(
+                ['error' => 'Utilisateur non trouvé !'],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $jsonContent = $request->getContent();
+
+        try {
+            $user = $serializer->deserialize($jsonContent, User::class, 'json');
+        } catch (NotEncodableValueException $e) {
+            return $this->json(
+                ['error' => 'JSON invalide'],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
+        $errors = $validator->validate($user);
+
+        if (count($errors) > 0) {
+            $errorsClean = [];
+            // @Retourner des erreurs de validation propres
+            /** @var ConstraintViolation $error */
+            foreach ($errors as $error) {
+                $errorsClean[$error->getPropertyPath()][] = $error->getMessage();
+            };
+
+            return $this->json($errorsClean, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // Constraint 
+
+
+        // Password hashed
+        $hashedPassword = $userPasswordHasher->hashPassword($user, $user->getPassword());
+
+        // Update connected User
+        $connectedUser->setPassword($hashedPassword);
+
+        $entityManager = $doctrine->getManager();
+        $entityManager->persist($connectedUser);
+        $entityManager->flush();
+
+        return $this->json(
+            $connectedUser,
+            Response::HTTP_OK,
+            [
+                'Location' => $this->generateUrl('app_api_users_get_item')
+            ],
+            ['groups' => [
+                'get_users_item'
+            ]]
+        );
+    }   
 
     /**
      * Delete user item
