@@ -19,7 +19,7 @@ class ApiManager
     /**
      * Give back SimpleXMLElement for the given book
      * 
-     * @param string $isbn Book ISBN
+     * @param string $isbn
      * 
      * @return SimpleXMLElement
      */
@@ -50,11 +50,11 @@ class ApiManager
     }
 
     /**
-     * Give back cover URL for the given book
+     * Give Book in array
      * 
-     * @param string $isbn Book ISBN
+     * @param SimpleXMLElement $xml
      * 
-     * @return string Book's URL
+     * @return array $book
      */
     public function getBook($xml)
     {
@@ -66,6 +66,7 @@ class ApiManager
         $collection = $this->getCollection($xml);
         $date = $this->getDate($xml);
         $price = $this->getPrice($xml);
+        $pages = $this->getPages($xml);
         $ark = $this->getArk($xml);
         $summary = $this->getSummary($xml);
 
@@ -76,6 +77,7 @@ class ApiManager
         $book["collection"] = $collection ;
         $book["date"] = $date ;
         $book["price"] = $price ;
+        $book["pages"] = $pages ;
         $book["ark"] = $ark ;
         $book["summary"] = $summary ;
 
@@ -83,11 +85,11 @@ class ApiManager
     }
 
     /**
-     * Give back cover URL for the given book
+     * Give back ISBN for the given book
      * 
-     * @param string $isbn Book ISBN
+     * @param SimpleXMLElement $xml
      * 
-     * @return string Book's URL
+     * @return string $isbn 
      */
     private function getISBN($xml)
     {
@@ -95,22 +97,20 @@ class ApiManager
         $isbnArray = $xml->xpath("//mxc:datafield[@tag='073']/mxc:subfield[@code='a']");
         // Does the isbn exist ?
         if (!array_key_exists(0, $isbnArray)) {
-            // $isbn = null;
-            echo "ISBN : NULL <br/>";
+            $isbn = null;
         } else {
-            $isbn = $isbnArray[0]->__toString();
-            echo "ISBN : " . $isbn . "<br/>";
+            $isbn = intval($isbnArray[0]->__toString());
         }
 
         return $isbn; 
     }
 
     /**
-     * Give back cover URL for the given book
+     * Give back the title for the given book
      * 
-     * @param string $isbn Book ISBN
+     * @param SimpleXMLElement $xml
      * 
-     * @return string Book's URL
+     * @return string $title
      */
     private function getTitle($xml)
     {
@@ -118,21 +118,20 @@ class ApiManager
         $titleArray = $xml->xpath("//mxc:datafield[@tag='200']/mxc:subfield[@code='a']");
 
         if (!array_key_exists(0, $titleArray)) {
-            echo "Titre : NULL <br/>";
+            $title = null;
         } else {
             $title = $titleArray[0]->__toString();
-            echo "Titre : " . $title . "<br/>";
         }
 
         return $title;
     }
 
     /**
-     * Give back cover URL for the given book
+     * Give back the author for the given book
      * 
-     * @param string $isbn Book ISBN
+     * @param SimpleXMLElement $xml
      * 
-     * @return string Book's URL
+     * @return array $author
      */
     private function getAuthor($xml)
     {
@@ -144,19 +143,17 @@ class ApiManager
 
         $authorLastnameArray = $xml->xpath("//mxc:datafield[@tag='700']/mxc:subfield[@code='a']");
         if (!array_key_exists(0, $authorLastnameArray)) {
-            echo "Nom auteur : NULL <br/>";
+            $author ["lastname"] = null;
         } else {
             $authorLastname = $authorLastnameArray[0]->__toString();
-            echo "Nom auteur : " . $authorLastname . "<br/>";
             $author ["lastname"] = $authorLastname ;
         }
 
         $authorFirstnameArray = $xml->xpath("//mxc:datafield[@tag='700']/mxc:subfield[@code='b']");
         if (!array_key_exists(0, $authorFirstnameArray)) {
-            echo "Prénom auteur : NULL <br/>";
+            $author ["firstname"] = null;
         } else {
             $authorFirstname = $authorFirstnameArray[0]->__toString();
-            echo "Prénom auteur : " . $authorFirstname . "<br/>";
             $author ["firstname"] = $authorFirstname ;
         }
 
@@ -164,11 +161,11 @@ class ApiManager
     }
 
     /**
-     * Give back cover URL for the given book
+     * Give back the editor for the given book
      * 
-     * @param string $isbn Book ISBN
+     * @param SimpleXMLElement $xml
      * 
-     * @return string Book's URL
+     * @return string $editor
      */
     private function getEditor($xml)
     {
@@ -178,25 +175,23 @@ class ApiManager
         if (!array_key_exists(0, $editorArray)) {
             $editorArrayBis = $xml->xpath("//mxc:datafield[@tag='214']/mxc:subfield[@code='c']");
             if (!array_key_exists(0, $editorArrayBis)) {
-                echo "Editeur : : NULL <br/>";
+                $editor = null ; 
             } else {
                 $editor = $editorArrayBis[0]->__toString();
-                echo "Editeur : " . $editor . "<br/>";
             }
         } else {
             $editor = $editorArray[0]->__toString();
-            echo "Editeur : " . $editor . "<br/>";
         }
 
         return $editor;
     }
     
     /**
-     * Give back cover URL for the given book
+     * Give back the collection for the given book
      * 
-     * @param string $isbn Book ISBN
+     * @param SimpleXMLElement $xml
      * 
-     * @return string Book's URL
+     * @return string $collection
      */
     private function getCollection($xml)
     {
@@ -206,15 +201,12 @@ class ApiManager
         if (!array_key_exists(0, $collectionArray)) {
             $collectionArrayBis = $xml->xpath("//mxc:datafield[@tag='225']/mxc:subfield[@code='i']");
             if (!array_key_exists(0, $collectionArrayBis)) {
-                echo "Collection : NULL <br/>";
-                $collection = "";
+                $collection = null;
             } else {
                 $collection = $collectionArrayBis[0]->__toString();
-                echo "Collection : " . $collection . "<br/>";
             }
         } else {
             $collection = $collectionArray[0]->__toString();
-            echo "Collection : " . $collection . "<br/>";
         }
 
         return $collection;
@@ -222,11 +214,11 @@ class ApiManager
     }
 
     /**
-     * Give back cover URL for the given book
+     * Give back the publication date for the given book
      * 
-     * @param string $isbn Book ISBN
+     * @param SimpleXMLElement $xml
      * 
-     * @return string Book's URL
+     * @return string $date
      */
     private function getDate($xml)
     {
@@ -236,69 +228,93 @@ class ApiManager
         if (!array_key_exists(0, $dateArray)) {
             $dateArrayBis = $xml->xpath("//mxc:datafield[@tag='214']/mxc:subfield[@code='d']");
             if (!array_key_exists(0, $dateArrayBis)) {
-                echo "Date : NULL <br/>";
+                $date = null ;
             } else {
                 $date = $dateArrayBis[0]->__toString();
-                echo "Date : " . $date . "<br/>";
+                $date = intval(preg_replace('/[^0-9]/', '', $date));
             }
         } else {
             $date = $dateArray[0]->__toString();
-            echo "Date : " . $date . "<br/>";
+            $date = intval(preg_replace('/[^0-9]/', '', $date));
+
         }
 
         return $date ;
     }
 
     /**
-     * Give back cover URL for the given book
+     * Give back the price for the given book
      * 
-     * @param string $isbn Book ISBN
+     * @param SimpleXMLElement $xml
      * 
-     * @return string Book's URL
+     * @return string $price
      */
     private function getPrice($xml)
     {
         // Price : "//mxc:datafield[@tag='010']/mxc:subfield[@code='d']"
         $priceArray = $xml->xpath("//mxc:datafield[@tag='010']/mxc:subfield[@code='d']");
         if (!array_key_exists(0, $priceArray)) {
-            echo "Prix : NULL <br/>";
+            $price = null;
         } else {
             $price = $priceArray[0]->__toString();
-            echo "Prix : " . $price . "<br/>";
+            //$price = floatval(preg_replace('/[^0-9,.]/', '', $price));
+
         }
-        
+    
         return $price;
+    }
+
+        /**
+     * Give back the pages for the given book
+     * 
+     * @param SimpleXMLElement $xml
+     * 
+     * @return string $pages
+     */
+    private function getPages($xml)
+    {
+        // Pages : "//mxc:datafield[@tag='215']/mxc:subfield[@code='a']"
+        $pageArray = $xml->xpath("//mxc:datafield[@tag='215']/mxc:subfield[@code='a']");
+        if (!array_key_exists(0, $pageArray)) {
+            $pages = null;
+        } else {
+            $pages = $pageArray[0]->__toString();
+            $pages = preg_replace('/[^0-9,.]/', '', $pages);
+            $pages = explode('.', $pages);
+            $pages = intval($pages[1]);
+           
+        }
+    
+        return $pages;
     }
 
     /**
      * Give back cover URL for the given book
      * 
-     * @param string $isbn Book ISBN
+     * @param SimpleXMLElement $xml
      * 
-     * @return string Book's URL
+     * @return string $coverUrl
      */
     private function getArk($xml)
     {
         // Ark : "//srw:recordIdentifier"
         $arkArray = $xml->xpath("//srw:recordIdentifier");
         if (!array_key_exists(0, $arkArray)) {
-            echo "Ark : NULL <br/>";
+            $coverUrl = null ;
         } else {
             $ark = $arkArray[0]->__toString();
             $coverUrl = "https://catalogue.bnf.fr/couverture?&appName=NE&idArk={$ark}&couverture=1";
-            echo "Ark : {$ark}<br/>";
-            echo "Couverture : {$coverUrl} <br/>";
         }
 
         return $coverUrl;
     }
 
     /**
-     * Give back cover URL for the given book
+     * Give back the summary for the given book
      * 
-     * @param string $isbn Book ISBN
+     * @param SimpleXMLElement $xml
      * 
-     * @return string Book's URL
+     * @return string $summary
      */
     private function getSummary($xml)
     {
@@ -307,16 +323,13 @@ class ApiManager
         $summaryArray = $xml->xpath("//mxc:datafield[@tag='330']/mxc:subfield[@code='a']");
         if (!array_key_exists(0, $summaryArray)) {
             $summaryArrayBis = $xml->xpath("//mxc:datafield[@tag='339']/mxc:subfield[@code='a']");
-            if (!array_key_exists(0, $summaryArrayBis)) {
-                echo "Résumé : NULL <br/>";
-                $summary = "";
+            if (!array_key_exists(0, $summaryArrayBis)) {   
+                $summary = null;
             } else {
                 $summary = $summaryArrayBis[0]->__toString();
-                echo "Résumé : " . $summary . "<br/>";
             }
         } else {
             $summary = $summaryArray[0]->__toString();
-            echo "Résumé : " . $summary . "<br/>";
         }
 
         return $summary;
