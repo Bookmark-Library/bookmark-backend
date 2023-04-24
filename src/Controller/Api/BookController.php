@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use App\Entity\Author;
 use App\Entity\Book;
 use App\Repository\BookRepository;
+use App\Service\ApiManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -118,4 +119,63 @@ class BookController extends AbstractController
             ]]
         );
     }
+
+    /**
+     * Create book item by ISBN with BNF API
+     * 
+     * @Route("/api/books/isbn", name="app_api_books_isbn_post", methods={"POST"})
+     */
+    public function createItemByIsbn(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ApiManager $apiManager, ValidatorInterface $validator)
+    {
+        // JSON with ISBN 
+        $jsonContent = $request->getContent();
+        $isbn = json_decode($jsonContent)->isbn;
+        
+        // Fetch By given ISBN
+        $xml = $apiManager->fetchByISBN($isbn);
+
+        $book = $apiManager->getBook($xml);
+        
+        dd($book);
+
+        /* try {
+            $book = $serializer->deserialize($jsonContent, Book::class, 'json');
+        } catch (NotEncodableValueException $e) {
+            return $this->json(
+                ['error' => 'JSON invalide'],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        } */
+
+/*         $errors = $validator->validate($book);
+
+        if (count($errors) > 0) {
+            $errorsClean = []; */
+            // @Retourner des erreurs de validation propres
+            /** @var ConstraintViolation $error */
+/*             foreach ($errors as $error) {
+                $errorsClean[$error->getPropertyPath()][] = $error->getMessage();
+            };
+
+            return $this->json($errorsClean, Response::HTTP_UNPROCESSABLE_ENTITY);
+        } */
+
+/*         $entityManager = $doctrine->getManager();
+        $entityManager->persist($book);
+        $entityManager->flush(); */
+
+/*         return $this->json(
+            $book,
+            Response::HTTP_CREATED,
+            [
+                'Location' => $this->generateUrl('app_api_books_get_item', ['id' => $book->getId()])
+            ],
+            ['groups' => [
+                'get_books_collection',
+                'get_authors_collection',
+                'get_genres_collection'
+            ]]
+        ); */
+    }
+
 }
