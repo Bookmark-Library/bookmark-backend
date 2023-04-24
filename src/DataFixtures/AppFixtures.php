@@ -76,9 +76,9 @@ class AppFixtures extends Fixture
             $book->setCollection($faker->city());
             $book->setPublicationDate(($faker->date('Y')));
             $book->setSummary($faker->text());
-            $book->setIsbn($faker->phoneNumber());
+            $book->setIsbn($faker->randomNumber(6, false));
             $book->setPages($faker->randomNumber(3, false));
-            $book->setPrice($faker->randomFloat(2));
+            $book->setPrice($faker->randomFloat(2) . " EUR");
             $book->setImage("https://catalogue.bnf.fr/couverture?&appName=NE&idArk=ark:/" .  $faker->randomNumber(5, true)  . "/cb44496975d&couverture=1");
 
             for ($a = 1; $a <= mt_rand(1, 3); $a++) {

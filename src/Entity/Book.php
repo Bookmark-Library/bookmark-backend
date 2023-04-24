@@ -62,7 +62,7 @@ class Book
     private $pages;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="string", length=64, nullable=true)
      * @Groups({"get_books_collection"})
      */
     private $price;
@@ -74,7 +74,7 @@ class Book
     private $image;
 
     /**
-     * @ORM\Column(type="string", length=64, nullable=true)
+     * @ORM\Column(type="integer", length=64, nullable=true)
      * @Groups({"get_books_collection"})
      */
     private $publicationDate;
@@ -172,18 +172,6 @@ class Book
         return $this;
     }
 
-    public function getPrice(): ?float
-    {
-        return $this->price;
-    }
-
-    public function setPrice(?float $price): self
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
     public function getImage(): ?string
     {
         return $this->image;
@@ -250,30 +238,6 @@ class Book
         return $this;
     }
 
-    public function getIsbn(): ?string
-    {
-        return $this->isbn;
-    }
-
-    public function setIsbn(?string $isbn): self
-    {
-        $this->isbn = $isbn;
-
-        return $this;
-    }
-
-    public function getPublicationDate(): ?string
-    {
-        return $this->publicationDate;
-    }
-
-    public function setPublicationDate(?string $publicationDate): self
-    {
-        $this->publicationDate = $publicationDate;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Library>
      */
@@ -303,4 +267,43 @@ class Book
 
         return $this;
     }
+
+
+
+    public function getPrice(): ?string
+    {
+        return $this->price;
+    }
+
+    public function setPrice(?string $price): self
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getPublicationDate(): ?int
+    {
+        return $this->publicationDate;
+    }
+
+    public function setPublicationDate(?int $publicationDate): self
+    {
+        $this->publicationDate = $publicationDate;
+
+        return $this;
+    }
+
+    public function getIsbn(): ?string
+    {
+        return $this->isbn;
+    }
+
+    public function setIsbn(?string $isbn): self
+    {
+        $this->isbn = $isbn;
+
+        return $this;
+    }
+
 }

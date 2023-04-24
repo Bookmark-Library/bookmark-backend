@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class BookController extends AbstractController
 {
@@ -125,7 +126,7 @@ class BookController extends AbstractController
      * 
      * @Route("/api/books/isbn", name="app_api_books_isbn_post", methods={"POST"})
      */
-    public function createItemByIsbn(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ApiManager $apiManager, ValidatorInterface $validator)
+    public function createItemByIsbn(Request $request, DenormalizerInterface $denormalizerInterface, ManagerRegistry $doctrine, ApiManager $apiManager, ValidatorInterface $validator)
     {
         // JSON with ISBN 
         $jsonContent = $request->getContent();
@@ -134,37 +135,36 @@ class BookController extends AbstractController
         // Fetch By given ISBN
         $xml = $apiManager->fetchByISBN($isbn);
 
-        $book = $apiManager->getBook($xml);
-        
-        dd($book);
+        $bookArray = $apiManager->getBook($xml);
 
-        /* try {
-            $book = $serializer->deserialize($jsonContent, Book::class, 'json');
+        //dd($bookArray);
+        try {
+            $book = $denormalizerInterface->denormalize($bookArray, Book::class);
         } catch (NotEncodableValueException $e) {
             return $this->json(
-                ['error' => 'JSON invalide'],
+                ['error' => 'Tableau invalide'],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
-        } */
+        } 
 
-/*         $errors = $validator->validate($book);
+        $errors = $validator->validate($book);
 
         if (count($errors) > 0) {
-            $errorsClean = []; */
+            $errorsClean = []; 
             // @Retourner des erreurs de validation propres
             /** @var ConstraintViolation $error */
-/*             foreach ($errors as $error) {
+             foreach ($errors as $error) {
                 $errorsClean[$error->getPropertyPath()][] = $error->getMessage();
             };
 
             return $this->json($errorsClean, Response::HTTP_UNPROCESSABLE_ENTITY);
-        } */
+        } 
 
-/*         $entityManager = $doctrine->getManager();
+        $entityManager = $doctrine->getManager();
         $entityManager->persist($book);
-        $entityManager->flush(); */
+        $entityManager->flush(); 
 
-/*         return $this->json(
+         return $this->json(
             $book,
             Response::HTTP_CREATED,
             [
@@ -175,7 +175,7 @@ class BookController extends AbstractController
                 'get_authors_collection',
                 'get_genres_collection'
             ]]
-        ); */
+        ); 
     }
 
 }

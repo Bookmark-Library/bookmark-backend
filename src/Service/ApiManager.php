@@ -72,13 +72,13 @@ class ApiManager
 
         $book["isbn"] = $isbn ;
         $book["title"] = $title ;
-        $book["author"] = $author ;
+        $book["authors"] = $author ;
         $book["editor"] = $editor ;
         $book["collection"] = $collection ;
-        $book["date"] = $date ;
+        $book["publication_date"] = $date ;
         $book["price"] = $price ;
         $book["pages"] = $pages ;
-        $book["ark"] = $ark ;
+        $book["image"] = $ark ;
         $book["summary"] = $summary ;
 
         return $book ;
@@ -99,7 +99,7 @@ class ApiManager
         if (!array_key_exists(0, $isbnArray)) {
             $isbn = null;
         } else {
-            $isbn = intval($isbnArray[0]->__toString());
+            $isbn = $isbnArray[0]->__toString();
         }
 
         return $isbn; 
@@ -141,20 +141,38 @@ class ApiManager
         // Author2 firstname : "//mxc:datafield[@tag='701']/mxc:subfield[@code='b']"
         $author = [];
 
+        // Author 1
         $authorLastnameArray = $xml->xpath("//mxc:datafield[@tag='700']/mxc:subfield[@code='a']");
         if (!array_key_exists(0, $authorLastnameArray)) {
-            $author ["lastname"] = null;
+            $author [0]['lastname'] = null;
         } else {
             $authorLastname = $authorLastnameArray[0]->__toString();
-            $author ["lastname"] = $authorLastname ;
+            $author [0]['lastname'] = $authorLastname ;
         }
 
         $authorFirstnameArray = $xml->xpath("//mxc:datafield[@tag='700']/mxc:subfield[@code='b']");
         if (!array_key_exists(0, $authorFirstnameArray)) {
-            $author ["firstname"] = null;
+            $author [0]['firstname'] = null;
         } else {
             $authorFirstname = $authorFirstnameArray[0]->__toString();
-            $author ["firstname"] = $authorFirstname ;
+            $author [0]['firstname'] = $authorFirstname ;
+        }
+
+        // Author 2
+        $authorLastnameArray = $xml->xpath("//mxc:datafield[@tag='702']/mxc:subfield[@code='a']");
+        if (!array_key_exists(0, $authorLastnameArray)) {
+            $author [1]['lastname'] = null;
+        } else {
+            $authorLastname = $authorLastnameArray[0]->__toString();
+            $author [1]['lastname'] = $authorLastname ;
+        }
+
+        $authorFirstnameArray = $xml->xpath("//mxc:datafield[@tag='702']/mxc:subfield[@code='b']");
+        if (!array_key_exists(0, $authorFirstnameArray)) {
+            $author [1]['firstname'] = null;
+        } else {
+            $authorFirstname = $authorFirstnameArray[0]->__toString();
+            $author [1]['firstname'] = $authorFirstname ;
         }
 
         return $author;
