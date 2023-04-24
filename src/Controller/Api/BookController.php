@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\Author;
 use App\Entity\Book;
+use App\Entity\Library;
 use App\Repository\BookRepository;
 use App\Service\ApiManager;
 use Doctrine\Persistence\ManagerRegistry;
@@ -128,6 +129,19 @@ class BookController extends AbstractController
      */
     public function createItemByIsbn(Request $request, DenormalizerInterface $denormalizerInterface, ManagerRegistry $doctrine, ApiManager $apiManager, ValidatorInterface $validator)
     {
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        if ($user === null) {
+            return $this->json(
+                ['error' => 'Utilisateur non trouvé !'],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $library = new Library();
+
         // JSON with ISBN 
         $jsonContent = $request->getContent();
         $isbn = json_decode($jsonContent)->isbn;
@@ -162,6 +176,10 @@ class BookController extends AbstractController
 
         $entityManager = $doctrine->getManager();
         $entityManager->persist($book);
+
+        $library->setUser($user);
+        $library->setBook($book);
+        $entityManager->persist($library);
         $entityManager->flush(); 
 
          return $this->json(

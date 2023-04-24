@@ -161,7 +161,7 @@ class ApiManager
         // Author 2
         $authorLastnameArray = $xml->xpath("//mxc:datafield[@tag='702']/mxc:subfield[@code='a']");
         if (!array_key_exists(0, $authorLastnameArray)) {
-            $author [1]['lastname'] = null;
+            return $author;
         } else {
             $authorLastname = $authorLastnameArray[0]->__toString();
             $author [1]['lastname'] = $authorLastname ;
@@ -175,7 +175,7 @@ class ApiManager
             $author [1]['firstname'] = $authorFirstname ;
         }
 
-        return $author;
+        
     }
 
     /**
