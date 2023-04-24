@@ -175,7 +175,7 @@ class ApiManager
             $author [1]['firstname'] = $authorFirstname ;
         }
 
-        
+        return $author;
     }
 
     /**
