@@ -80,6 +80,18 @@ class BookController extends AbstractController
      */
     public function createItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator)
     {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        if ($user === null) {
+            return $this->json(
+                ['error' => 'Utilisateur non trouvé !'],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $library = new Library();
+
         $jsonContent = $request->getContent();
 
         try {
@@ -106,6 +118,11 @@ class BookController extends AbstractController
 
         $entityManager = $doctrine->getManager();
         $entityManager->persist($book);
+
+        $library->setUser($user);
+        $library->setBook($book);
+        $entityManager->persist($library);
+
         $entityManager->flush();
 
         return $this->json(
@@ -145,7 +162,7 @@ class BookController extends AbstractController
         // JSON with ISBN 
         $jsonContent = $request->getContent();
         $isbn = json_decode($jsonContent)->isbn;
-        
+
         // Fetch By given ISBN
         $xml = $apiManager->fetchByISBN($isbn);
 
@@ -159,20 +176,20 @@ class BookController extends AbstractController
                 ['error' => 'Tableau invalide'],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
-        } 
+        }
 
         $errors = $validator->validate($book);
 
         if (count($errors) > 0) {
-            $errorsClean = []; 
+            $errorsClean = [];
             // @Retourner des erreurs de validation propres
             /** @var ConstraintViolation $error */
-             foreach ($errors as $error) {
+            foreach ($errors as $error) {
                 $errorsClean[$error->getPropertyPath()][] = $error->getMessage();
             };
 
             return $this->json($errorsClean, Response::HTTP_UNPROCESSABLE_ENTITY);
-        } 
+        }
 
         $entityManager = $doctrine->getManager();
         $entityManager->persist($book);
@@ -180,9 +197,9 @@ class BookController extends AbstractController
         $library->setUser($user);
         $library->setBook($book);
         $entityManager->persist($library);
-        $entityManager->flush(); 
+        $entityManager->flush();
 
-         return $this->json(
+        return $this->json(
             $book,
             Response::HTTP_CREATED,
             [
@@ -193,7 +210,6 @@ class BookController extends AbstractController
                 'get_authors_collection',
                 'get_genres_collection'
             ]]
-        ); 
+        );
     }
-
 }
