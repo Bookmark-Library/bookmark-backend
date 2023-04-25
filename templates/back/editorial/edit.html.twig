@@ -1,13 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Editorial{% endblock %}
+{% block title %}Modifier l'éditorial
+{% endblock %}
 
 {% block body %}
-    <h1>Edit Editorial</h1>
+	<h1>Modifier l'éditorial</h1>
 
-    {{ include('back/editorial/_form.html.twig', {'button_label': 'Update'}) }}
+	{{ include('back/editorial/_form.html.twig', {'button_label': 'Modifier'}) }}
 
-    <a href="{{ path('app_back_editorial_index') }}">back to list</a>
+	<a href="{{ path('app_back_editorial_index') }}" class="btn btn-primary">Retour à la liste</a>
 
-    {{ include('back/editorial/_delete_form.html.twig') }}
+	{{ include('back/editorial/_delete_form.html.twig') }}
 {% endblock %}

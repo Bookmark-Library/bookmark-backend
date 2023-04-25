@@ -6,6 +6,7 @@ use App\Repository\EditorialRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=EditorialRepository::class)
@@ -21,11 +22,13 @@ class Editorial
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=4000)
+     * @Assert\NotBlank
      */
     private $content;
 
@@ -34,6 +37,16 @@ class Editorial
      */
     private $image;
 
+    /**
+     * @ORM\Column(type="boolean", options={"default": 0})
+     * @Assert\NotBlank
+     */
+    private $active;
+
+    public function __construct()
+    {
+        $this->active = 0;
+    }
 
     public function getId(): ?int
     {
@@ -72,6 +85,18 @@ class Editorial
     public function setImage(?string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
 
         return $this;
     }

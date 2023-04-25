@@ -37,12 +37,38 @@ class EditorialController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $editorialRepository->add($editorial, true);
 
+            $this->addFlash('success', "L'éditorial <b>{$editorial->getTitle()}</b> a bien été ajouté.");
+
             return $this->redirectToRoute('app_back_editorial_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('back/editorial/new.html.twig', [
             'editorial' => $editorial,
             'form' => $form,
+        ]);
+    }
+
+    /**
+     * @Route("/homeActive", name="app_back_editorial_home_active", methods={"GET", "POST"})
+     */
+    public function homeOrder(EditorialRepository $editorialRepository, Request $request): Response
+    {
+        if ($request->isMethod('POST')) {
+
+            $editorials = $editorialRepository->findAll();
+            foreach ($editorials as $editorial) {
+                $editorial->setActive(0);
+            }
+
+            $editorial = $editorialRepository->find($request->request->get('active'));
+            $editorial->setActive(1);
+            $editorialRepository->add($editorial, true);
+
+            return $this->redirectToRoute('app_back_editorial_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('back/editorial/home_active.html.twig', [
+            'editorials' => $editorialRepository->findAll(),
         ]);
     }
 
@@ -67,6 +93,8 @@ class EditorialController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $editorialRepository->add($editorial, true);
 
+            $this->addFlash('warning', "L'éditorial <b>{$editorial->getTitle()}</b> a bien été modifié.");
+
             return $this->redirectToRoute('app_back_editorial_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -83,6 +111,7 @@ class EditorialController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $editorial->getId(), $request->request->get('_token'))) {
             $editorialRepository->remove($editorial, true);
+            $this->addFlash('danger', "L'éditorial <b>{$editorial->getTitle()}</b> a bien été supprimé.");
         }
 
         return $this->redirectToRoute('app_back_editorial_index', [], Response::HTTP_SEE_OTHER);

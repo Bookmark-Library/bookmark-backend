@@ -1,34 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Editorial{% endblock %}
+{% block title %}Editorial
+{% endblock %}
 
 {% block body %}
-    <h1>Editorial</h1>
+	<h1>Editorial</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ editorial.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ editorial.title }}</td>
-            </tr>
-            <tr>
-                <th>Content</th>
-                <td>{{ editorial.content }}</td>
-            </tr>
-            <tr>
-                <th>Image</th>
-                <td>{{ editorial.image }}</td>
-            </tr>
-        </tbody>
-    </table>
+	<table class="table">
+		<tbody>
+			<tr>
+				<th>Id</th>
+				<td>{{ editorial.id }}</td>
+			</tr>
+			<tr>
+				<th>Titre</th>
+				<td>{{ editorial.title }}</td>
+			</tr>
+			<tr>
+				<th>Contenu</th>
+				<td>{{ editorial.content }}</td>
+			</tr>
+			<tr>
+				<th>Image</th>
+				<td>{{ editorial.image }}</td>
+			</tr>
+		</tbody>
+	</table>
 
-    <a href="{{ path('app_back_editorial_index') }}">back to list</a>
+	<a href="{{ path('app_back_book_index') }}" class="btn btn-primary">Retour à la liste</a>
 
-    <a href="{{ path('app_back_editorial_edit', {'id': editorial.id}) }}">edit</a>
+	<a href="{{ path('app_back_editorial_edit', {'id': editorial.id}) }}" class="btn btn-warning">Modifier</a>
 
-    {{ include('back/editorial/_delete_form.html.twig') }}
+	{{ include('back/editorial/_delete_form.html.twig') }}
 {% endblock %}

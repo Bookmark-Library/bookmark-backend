@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Editorial{% endblock %}
+{% block title %}Nouvel Editorial
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Editorial</h1>
+	<h1>Ajouter un éditorial</h1>
 
-    {{ include('back/editorial/_form.html.twig') }}
+	{{ include('back/editorial/_form.html.twig') }}
 
-    <a href="{{ path('app_back_editorial_index') }}">back to list</a>
+	<a href="{{ path('app_back_book_index') }}" class="btn btn-primary">Retour à la liste</a>
 {% endblock %}

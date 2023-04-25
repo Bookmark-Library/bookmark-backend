@@ -1,39 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Editorial index{% endblock %}
+{% block title %}Liste des éditoriaux
+{% endblock %}
 
 {% block body %}
-    <h1>Editorial index</h1>
+	<h1>Liste des éditoriaux</h1>
+	<a href="{{ path('app_back_editorial_new') }}" class="btn btn-success">Créer</a>
+	<a href="{{ path('app_back_editorial_home_active') }}" class="btn btn-info">Choisir l'éditorial pour la page d'accueil</a>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Content</th>
-                <th>Image</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for editorial in editorials %}
-            <tr>
-                <td>{{ editorial.id }}</td>
-                <td>{{ editorial.title }}</td>
-                <td>{{ editorial.content }}</td>
-                <td>{{ editorial.image }}</td>
-                <td>
-                    <a href="{{ path('app_back_editorial_show', {'id': editorial.id}) }}">show</a>
-                    <a href="{{ path('app_back_editorial_edit', {'id': editorial.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+	{{ include('_flash_messages.html.twig') }}
 
-    <a href="{{ path('app_back_editorial_new') }}">Create new</a>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Titre</th>
+				<th>Contenu</th>
+				<th>Image</th>
+				<th>Active</th>
+				<th>actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for editorial in editorials %}
+				<tr>
+					<td>{{ editorial.id }}</td>
+					<td>{{ editorial.title }}</td>
+					<td>{{ editorial.content }}</td>
+					<td>{{ editorial.image }}</td>
+					<td>{{ editorial.active }}</td>
+					<td>
+						<a href="{{ path('app_back_editorial_show', {'id': editorial.id}) }}" class="btn btn-primary">Voir</a>
+						<a href="{{ path('app_back_editorial_edit', {'id': editorial.id}) }}" class="btn btn-warning">Modifier</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="5">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
 {% endblock %}
