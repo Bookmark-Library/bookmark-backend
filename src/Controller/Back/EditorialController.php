@@ -68,7 +68,7 @@ class EditorialController extends AbstractController
         }
 
         return $this->render('back/editorial/home_active.html.twig', [
-            'editorials' => $editorialRepository->findAll(),
+            'editorials' => $editorialRepository->findAllOrderedByName(),
         ]);
     }
 
