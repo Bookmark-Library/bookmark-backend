@@ -50,7 +50,18 @@ class GenreRepository extends ServiceEntityRepository
         return $query->getQuery()->getResult();
     }
 
+    /**
+     * Liste des genres par homeOrder
+     */
+    public function findByHomeOrder()
+    {
+        $query = $this->createQueryBuilder('g')
+            ->where('g.homeOrder > :val')
+            ->setParameter('val', 0)
+            ->orderBy('g.homeOrder', 'ASC');
 
+        return $query->getQuery()->getResult();
+    }
 
     //    /**
     //     * @return Genre[] Returns an array of Genre objects
