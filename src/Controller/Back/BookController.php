@@ -36,6 +36,7 @@ class BookController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $bookRepository->add($book, true);
+            $this->addFlash('success', "Le livre <b>{$book->getTitle()}</b> a bien été ajouté.");
 
             return $this->redirectToRoute('app_back_book_index', [], Response::HTTP_SEE_OTHER);
         }
