@@ -69,7 +69,7 @@ class GenreController extends AbstractController
         }
 
         return $this->render('back/genre/home_order.html.twig', [
-            'genres' => $genreRepository->findAllOrderedByName(),
+            'genres' => $genreRepository->findAll(),
         ]);
     }
 

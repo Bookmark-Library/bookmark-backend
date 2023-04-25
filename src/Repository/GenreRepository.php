@@ -39,6 +39,19 @@ class GenreRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * Liste des genres par ordre alpha
+     */
+    public function findAllOrderedByName()
+    {
+        $query = $this->createQueryBuilder('g')
+            ->orderBy('g.name', 'ASC');
+
+        return $query->getQuery()->getResult();
+    }
+
+
+
     //    /**
     //     * @return Genre[] Returns an array of Genre objects
     //     */
