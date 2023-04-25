@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editorial index{% endblock %}
+
+{% block body %}
+    <h1>Editorial index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Image</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for editorial in editorials %}
+            <tr>
+                <td>{{ editorial.id }}</td>
+                <td>{{ editorial.title }}</td>
+                <td>{{ editorial.content }}</td>
+                <td>{{ editorial.image }}</td>
+                <td>
+                    <a href="{{ path('app_back_editorial_show', {'id': editorial.id}) }}">show</a>
+                    <a href="{{ path('app_back_editorial_edit', {'id': editorial.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_back_editorial_new') }}">Create new</a>
+{% endblock %}

@@ -7,6 +7,7 @@ use Faker\Factory;
 use App\Entity\Book;
 use App\Entity\Genre;
 use App\Entity\Author;
+use App\Entity\Editorial;
 use App\Entity\Library;
 use App\Entity\User;
 use Doctrine\Persistence\ObjectManager;
@@ -34,6 +35,7 @@ class AppFixtures extends Fixture
         $this->connection->executeQuery('TRUNCATE TABLE genre');
         $this->connection->executeQuery('TRUNCATE TABLE library');
         $this->connection->executeQuery('TRUNCATE TABLE user');
+        $this->connection->executeQuery('TRUNCATE TABLE editorial');
         $this->connection->executeQuery('SET foreign_key_checks = 1');
     }
 
@@ -50,6 +52,13 @@ class AppFixtures extends Fixture
 
         $providerGenres = $bookmarkProvider->allBookGenre();
         $genresList = [];
+
+        $editorial = new Editorial();
+        $editorial->setTitle($faker->sentence(mt_rand(1, 4)));
+        $editorial->setContent($faker->text());
+        $editorial->setImage($faker->imageUrl());
+
+        $manager->persist($editorial);
 
         for ($g = 0; $g < count($providerGenres); $g++) {
             $genre = new Genre();

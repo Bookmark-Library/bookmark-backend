@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Editorial{% endblock %}
+
+{% block body %}
+    <h1>Create new Editorial</h1>
+
+    {{ include('back/editorial/_form.html.twig') }}
+
+    <a href="{{ path('app_back_editorial_index') }}">back to list</a>
+{% endblock %}

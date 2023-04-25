@@ -66,6 +66,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $libraries;
 
+
     public function __construct()
     {
         $this->libraries = new ArrayCollection();

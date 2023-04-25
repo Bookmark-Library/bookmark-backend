@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Editorial{% endblock %}
+
+{% block body %}
+    <h1>Edit Editorial</h1>
+
+    {{ include('back/editorial/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_back_editorial_index') }}">back to list</a>
+
+    {{ include('back/editorial/_delete_form.html.twig') }}
+{% endblock %}
