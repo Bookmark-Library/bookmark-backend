@@ -1,58 +1,59 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Book{% endblock %}
+{% block title %}Livre
+{% endblock %}
 
 {% block body %}
-    <h1>Book</h1>
+	<h1>Livre</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ book.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ book.title }}</td>
-            </tr>
-            <tr>
-                <th>Editor</th>
-                <td>{{ book.editor }}</td>
-            </tr>
-            <tr>
-                <th>Collection</th>
-                <td>{{ book.collection }}</td>
-            </tr>
-            <tr>
-                <th>Summary</th>
-                <td>{{ book.summary }}</td>
-            </tr>
-            <tr>
-                <th>Isbn</th>
-                <td>{{ book.isbn }}</td>
-            </tr>
-            <tr>
-                <th>Pages</th>
-                <td>{{ book.pages }}</td>
-            </tr>
-            <tr>
-                <th>Price</th>
-                <td>{{ book.price }}</td>
-            </tr>
-            <tr>
-                <th>Image</th>
-                <td>{{ book.image }}</td>
-            </tr>
-            <tr>
-                <th>PublicationDate</th>
-                <td>{{ book.publicationDate }}</td>
-            </tr>
-        </tbody>
-    </table>
+	<table class="table">
+		<tbody>
+			<tr>
+				<th>Id</th>
+				<td>{{ book.id }}</td>
+			</tr>
+			<tr>
+				<th>Titre</th>
+				<td>{{ book.title }}</td>
+			</tr>
+			<tr>
+				<th>Editeur</th>
+				<td>{{ book.editor }}</td>
+			</tr>
+			<tr>
+				<th>Collection</th>
+				<td>{{ book.collection }}</td>
+			</tr>
+			<tr>
+				<th>Résumé</th>
+				<td>{{ book.summary }}</td>
+			</tr>
+			<tr>
+				<th>Isbn</th>
+				<td>{{ book.isbn }}</td>
+			</tr>
+			<tr>
+				<th>Pages</th>
+				<td>{{ book.pages }}</td>
+			</tr>
+			<tr>
+				<th>Prix</th>
+				<td>{{ book.price }}</td>
+			</tr>
+			<tr>
+				<th>Couverture</th>
+				<td>{{ book.image }}</td>
+			</tr>
+			<tr>
+				<th>Date de publication</th>
+				<td>{{ book.publicationDate }}</td>
+			</tr>
+		</tbody>
+	</table>
 
-    <a href="{{ path('app_back_book_index') }}">back to list</a>
+	<a href="{{ path('app_back_book_index') }}" class="btn btn-primary">Retour à la liste</a>
 
-    <a href="{{ path('app_back_book_edit', {'id': book.id}) }}">edit</a>
+	<a href="{{ path('app_back_book_edit', {'id': book.id}) }}" class="btn btn-warning">Modifier</a>
 
-    {{ include('back/book/_delete_form.html.twig') }}
+	{{ include('back/book/_delete_form.html.twig') }}
 {% endblock %}

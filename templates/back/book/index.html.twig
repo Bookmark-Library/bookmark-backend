@@ -1,51 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Book index{% endblock %}
+{% block title %}Liste des livres
+{% endblock %}
 
 {% block body %}
-    <h1>Book index</h1>
+	<h1>Liste des livres</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Editor</th>
-                <th>Collection</th>
-                <th>Summary</th>
-                <th>Isbn</th>
-                <th>Pages</th>
-                <th>Price</th>
-                <th>Image</th>
-                <th>PublicationDate</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for book in books %}
-            <tr>
-                <td>{{ book.id }}</td>
-                <td>{{ book.title }}</td>
-                <td>{{ book.editor }}</td>
-                <td>{{ book.collection }}</td>
-                <td>{{ book.summary }}</td>
-                <td>{{ book.isbn }}</td>
-                <td>{{ book.pages }}</td>
-                <td>{{ book.price }}</td>
-                <td>{{ book.image }}</td>
-                <td>{{ book.publicationDate }}</td>
-                <td>
-                    <a href="{{ path('app_back_book_show', {'id': book.id}) }}">show</a>
-                    <a href="{{ path('app_back_book_edit', {'id': book.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="11">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+	<a href="{{ path('app_back_book_new') }}" class="btn btn-success">Créer</a>
 
-    <a href="{{ path('app_back_book_new') }}">Create new</a>
+	{{ include('_flash_messages.html.twig') }}
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Titre</th>
+				<th>Editeur</th>
+				<th>Isbn</th>
+				<th>actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for book in books %}
+				<tr>
+					<td>{{ book.id }}</td>
+					<td>{{ book.title }}</td>
+					<td>{{ book.editor }}</td>
+					<td>{{ book.isbn }}</td>
+					<td>
+						<a href="{{ path('app_back_book_show', {'id': book.id}) }}" class="btn btn-primary">Voir</a>
+						<a href="{{ path('app_back_book_edit', {'id': book.id}) }}" class="btn btn-warning">Modifier</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="11">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
 {% endblock %}

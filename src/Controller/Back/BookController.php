@@ -67,6 +67,8 @@ class BookController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $bookRepository->add($book, true);
 
+            $this->addFlash('warning', "Le livre <b>{$book->getTitle()}</b> a bien été modifié.");
+
             return $this->redirectToRoute('app_back_book_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -81,8 +83,9 @@ class BookController extends AbstractController
      */
     public function delete(Request $request, Book $book, BookRepository $bookRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$book->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $book->getId(), $request->request->get('_token'))) {
             $bookRepository->remove($book, true);
+            $this->addFlash('danger', "Le livre <b>{$book->getTitle()}</b> a bien été supprimé.");
         }
 
         return $this->redirectToRoute('app_back_book_index', [], Response::HTTP_SEE_OTHER);
