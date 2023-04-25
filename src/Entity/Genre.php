@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 /**
  * @ORM\Entity(repositoryClass=GenreRepository::class)
  */
@@ -18,6 +19,7 @@ class Genre
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"get_genres_collection"})
      */
     private $id;
 
@@ -25,16 +27,19 @@ class Genre
      * @ORM\Column(type="string", length=255)
      * @Groups({"get_genres_collection"})
      * @Assert\NotBlank
+     * @Groups({"get_genres_collection"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="smallint", options={"default": 0})
+     * @Groups({"get_genres_collection"})
      */
     private $homeOrder;
 
     /**
      * @ORM\ManyToMany(targetEntity=Book::class, inversedBy="genres")
+     * @Groups({"get_genres_collection"})
      */
     private $books;
 

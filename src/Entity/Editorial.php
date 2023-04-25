@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 /**
  * @ORM\Entity(repositoryClass=EditorialRepository::class)
@@ -17,29 +19,34 @@ class Editorial
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"get_editorials_collection"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
+     * @Groups({"get_editorials_collection"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=4000)
      * @Assert\NotBlank
+     * @Groups({"get_editorials_collection"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="string", length=2048, nullable=true)
+     * @Groups({"get_editorials_collection"})
      */
     private $image;
 
     /**
      * @ORM\Column(type="boolean", options={"default": 0})
      * @Assert\NotBlank
+     * @Groups({"get_editorials_collection"})
      */
     private $active;
 
