@@ -50,6 +50,17 @@ class EditorialRepository extends ServiceEntityRepository
         return $query->getQuery()->getResult();
     }
 
+    /**
+     * Editorial for home page
+     */
+    public function findByHomeActive()
+    {
+        $query = $this->createQueryBuilder('e')
+            ->where('e.active = :val')
+            ->setParameter('val', 1);
+        return $query->getQuery()->getResult();
+    }
+
     //    /**
     //     * @return Editorial[] Returns an array of Editorial objects
     //     */
