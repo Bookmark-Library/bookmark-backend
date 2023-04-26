@@ -132,19 +132,33 @@ class ApiManager
             $parentArray = $xml->xpath("//mxc:datafield[@tag='225']/mxc:subfield[@code='a']");
             $volumeArrayBis = $xml->xpath("//mxc:datafield[@tag='225']/mxc:subfield[@code='v']");
 
-            if (!array_key_exists(0, $parentArray) && !array_key_exists(0, $volumeArrayBis)) {
+            if (!array_key_exists(0, $parentArray)) {
+                $parent = null;
+            } else {
+                //$volume = $parentArray[0]->__toString() . " (" . $volumeArrayBis[0]->__toString() . ")";
+                $parent = $parentArray[0]->__toString();
+            }
+
+            if (!array_key_exists(0, $volumeArrayBis)) {
                 $volume = null;
             } else {
-                $volume = $parentArray[0]->__toString() . " (" . $volumeArrayBis[0]->__toString() . ")";
+                $volume = $volumeArrayBis[0]->__toString();
             }
-        } else {
-            $volume = "(" . $volumeArray[0]->__toString() . ")";
-        }
 
-        if ($volume === null) {
-            return $title;
         } else {
-            return $title . " - " . $volume;
+            $volume = $volumeArray[0]->__toString();
+            $parent = null;
+        }
+        
+        if ($volume === null && $parent === null) {     
+            return $title;
+        } elseif ($volume === null) {
+            return $title . " - " . $parent ;
+        } elseif ($parent === null) {
+            return $title . " (" . $volume . ")";
+        }
+        else {
+            return $title . " - " . $parent . " (" . $volume . ")";
         }
     }
 
@@ -166,7 +180,7 @@ class ApiManager
         // Author 1
         $authorLastnameArray = $xml->xpath("//mxc:datafield[@tag='700']/mxc:subfield[@code='a']");
         if (!array_key_exists(0, $authorLastnameArray)) {
-            $author[0]['lastname'] = null;
+            $author[0]['lastname'] = "Inconnu";
         } else {
             $authorLastname = $authorLastnameArray[0]->__toString();
             $author[0]['lastname'] = $authorLastname;

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\Book;
 use App\Entity\Library;
 use App\Repository\BookRepository;
 use App\Repository\GenreRepository;
@@ -141,10 +142,13 @@ class LibraryController extends AbstractController
         $jsonContent = $request->getContent();
 
         $contentForBook = json_decode($request->getContent(), true);
-        $bookId = $contentForBook["book_id"];
-        $book = $bookRepository->find($bookId);
         $genreId = $contentForBook["genre_id"];
-        $genre = $genreRepository->find($genreId);
+        if ($genreId !== null) {
+            $genre = $genreRepository->find($genreId);
+            $book = $library->getBook();
+            $book->addGenre($genre);
+            $library->setGenre($genre);
+        }
 
         try {
             $newLibrary = $serializer->deserialize($jsonContent, Library::class, 'json');
@@ -166,8 +170,6 @@ class LibraryController extends AbstractController
 
             return $this->json($errorsClean, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        
-        $book->addGenre($genre);
 
         $library->setComment($newLibrary->getComment());
         $library->setFavorite($newLibrary->isFavorite());
@@ -176,8 +178,6 @@ class LibraryController extends AbstractController
         $library->setQuote($newLibrary->getQuote());
         $library->setRate($newLibrary->getRate());
         $library->setWishlist($newLibrary->isWishlist());
-        $library->setGenre($genre);
-
 
         $entityManager = $doctrine->getManager();
         $entityManager->persist($library);
