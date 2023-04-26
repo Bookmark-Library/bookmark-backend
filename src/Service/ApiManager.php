@@ -70,18 +70,18 @@ class ApiManager
         $ark = $this->getArk($xml);
         $summary = $this->getSummary($xml);
 
-        $book["isbn"] = $isbn ;
-        $book["title"] = $title ;
-        $book["authors"] = $author ;
-        $book["editor"] = $editor ;
-        $book["collection"] = $collection ;
-        $book["publication_date"] = $date ;
-        $book["price"] = $price ;
-        $book["pages"] = $pages ;
-        $book["image"] = $ark ;
-        $book["summary"] = $summary ;
+        $book["isbn"] = $isbn;
+        $book["title"] = $title;
+        $book["authors"] = $author;
+        $book["editor"] = $editor;
+        $book["collection"] = $collection;
+        $book["publication_date"] = $date;
+        $book["price"] = $price;
+        $book["pages"] = $pages;
+        $book["image"] = $ark;
+        $book["summary"] = $summary;
 
-        return $book ;
+        return $book;
     }
 
     /**
@@ -102,7 +102,7 @@ class ApiManager
             $isbn = $isbnArray[0]->__toString();
         }
 
-        return $isbn; 
+        return $isbn;
     }
 
     /**
@@ -123,7 +123,29 @@ class ApiManager
             $title = $titleArray[0]->__toString();
         }
 
-        return $title;
+        // Volume Title: "//mxc:datafield[@tag='200']/mxc:subfield[@code='h']"
+        // Parent Title: "//mxc:datafield[@tag='225']/mxc:subfield[@code='a']"
+        // Volume Title: "//mxc:datafield[@tag='225']/mxc:subfield[@code='v']"
+
+        $volumeArray = $xml->xpath("//mxc:datafield[@tag='200']/mxc:subfield[@code='h']");
+        if (!array_key_exists(0, $volumeArray)) {
+            $parentArray = $xml->xpath("//mxc:datafield[@tag='225']/mxc:subfield[@code='a']");
+            $volumeArrayBis = $xml->xpath("//mxc:datafield[@tag='225']/mxc:subfield[@code='v']");
+
+            if (!array_key_exists(0, $parentArray) && !array_key_exists(0, $volumeArrayBis)) {
+                $volume = null;
+            } else {
+                $volume = $parentArray[0]->__toString() . " (" . $volumeArrayBis[0]->__toString() . ")";
+            }
+        } else {
+            $volume = "(" . $volumeArray[0]->__toString() . ")";
+        }
+
+        if ($volume === null) {
+            return $title;
+        } else {
+            return $title . " - " . $volume;
+        }
     }
 
     /**
@@ -144,18 +166,18 @@ class ApiManager
         // Author 1
         $authorLastnameArray = $xml->xpath("//mxc:datafield[@tag='700']/mxc:subfield[@code='a']");
         if (!array_key_exists(0, $authorLastnameArray)) {
-            $author [0]['lastname'] = null;
+            $author[0]['lastname'] = null;
         } else {
             $authorLastname = $authorLastnameArray[0]->__toString();
-            $author [0]['lastname'] = $authorLastname ;
+            $author[0]['lastname'] = $authorLastname;
         }
 
         $authorFirstnameArray = $xml->xpath("//mxc:datafield[@tag='700']/mxc:subfield[@code='b']");
         if (!array_key_exists(0, $authorFirstnameArray)) {
-            $author [0]['firstname'] = null;
+            $author[0]['firstname'] = null;
         } else {
             $authorFirstname = $authorFirstnameArray[0]->__toString();
-            $author [0]['firstname'] = $authorFirstname ;
+            $author[0]['firstname'] = $authorFirstname;
         }
 
         // Author 2
@@ -164,15 +186,15 @@ class ApiManager
             return $author;
         } else {
             $authorLastname = $authorLastnameArray[0]->__toString();
-            $author [1]['lastname'] = $authorLastname ;
+            $author[1]['lastname'] = $authorLastname;
         }
 
         $authorFirstnameArray = $xml->xpath("//mxc:datafield[@tag='702']/mxc:subfield[@code='b']");
         if (!array_key_exists(0, $authorFirstnameArray)) {
-            $author [1]['firstname'] = null;
+            $author[1]['firstname'] = null;
         } else {
             $authorFirstname = $authorFirstnameArray[0]->__toString();
-            $author [1]['firstname'] = $authorFirstname ;
+            $author[1]['firstname'] = $authorFirstname;
         }
 
         return $author;
@@ -193,7 +215,7 @@ class ApiManager
         if (!array_key_exists(0, $editorArray)) {
             $editorArrayBis = $xml->xpath("//mxc:datafield[@tag='214']/mxc:subfield[@code='c']");
             if (!array_key_exists(0, $editorArrayBis)) {
-                $editor = null ; 
+                $editor = null;
             } else {
                 $editor = $editorArrayBis[0]->__toString();
             }
@@ -203,7 +225,7 @@ class ApiManager
 
         return $editor;
     }
-    
+
     /**
      * Give back the collection for the given book
      * 
@@ -228,7 +250,6 @@ class ApiManager
         }
 
         return $collection;
-
     }
 
     /**
@@ -246,7 +267,7 @@ class ApiManager
         if (!array_key_exists(0, $dateArray)) {
             $dateArrayBis = $xml->xpath("//mxc:datafield[@tag='214']/mxc:subfield[@code='d']");
             if (!array_key_exists(0, $dateArrayBis)) {
-                $date = null ;
+                $date = null;
             } else {
                 $date = $dateArrayBis[0]->__toString();
                 $date = intval(preg_replace('/[^0-9]/', '', $date));
@@ -254,10 +275,9 @@ class ApiManager
         } else {
             $date = $dateArray[0]->__toString();
             $date = intval(preg_replace('/[^0-9]/', '', $date));
-
         }
 
-        return $date ;
+        return $date;
     }
 
     /**
@@ -278,11 +298,11 @@ class ApiManager
             //$price = floatval(preg_replace('/[^0-9,.]/', '', $price));
 
         }
-    
+
         return $price;
     }
 
-        /**
+    /**
      * Give back the pages for the given book
      * 
      * @param SimpleXMLElement $xml
@@ -300,9 +320,8 @@ class ApiManager
             $pages = preg_replace('/[^0-9,.]/', '', $pages);
             $pages = explode('.', $pages);
             $pages = intval($pages[1]);
-           
         }
-    
+
         return $pages;
     }
 
@@ -318,7 +337,7 @@ class ApiManager
         // Ark : "//srw:recordIdentifier"
         $arkArray = $xml->xpath("//srw:recordIdentifier");
         if (!array_key_exists(0, $arkArray)) {
-            $coverUrl = null ;
+            $coverUrl = null;
         } else {
             $ark = $arkArray[0]->__toString();
             $coverUrl = "https://catalogue.bnf.fr/couverture?&appName=NE&idArk={$ark}&couverture=1";
@@ -341,7 +360,7 @@ class ApiManager
         $summaryArray = $xml->xpath("//mxc:datafield[@tag='330']/mxc:subfield[@code='a']");
         if (!array_key_exists(0, $summaryArray)) {
             $summaryArrayBis = $xml->xpath("//mxc:datafield[@tag='339']/mxc:subfield[@code='a']");
-            if (!array_key_exists(0, $summaryArrayBis)) {   
+            if (!array_key_exists(0, $summaryArrayBis)) {
                 $summary = null;
             } else {
                 $summary = $summaryArrayBis[0]->__toString();
@@ -352,5 +371,4 @@ class ApiManager
 
         return $summary;
     }
-
 }
