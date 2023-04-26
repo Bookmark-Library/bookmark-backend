@@ -39,6 +39,19 @@ class LibraryRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * Library with given user and book
+     */
+    public function findByLibrary($user, $book)
+    {
+        $query = $this->createQueryBuilder('l')
+            ->where('l.user = :user')
+            ->andWhere('l.book = :book')
+            ->setParameter('user', $user)
+            ->setParameter('book', $book);
+        return $query->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Library[] Returns an array of Library objects
 //     */

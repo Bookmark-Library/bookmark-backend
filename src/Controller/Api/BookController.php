@@ -6,7 +6,9 @@ use App\Entity\Author;
 use App\Entity\Book;
 use App\Entity\Library;
 use App\Repository\BookRepository;
+use App\Repository\LibraryRepository;
 use App\Service\ApiManager;
+use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -144,7 +146,7 @@ class BookController extends AbstractController
      * 
      * @Route("/api/books/isbn", name="app_api_books_isbn_post", methods={"POST"})
      */
-    public function createItemByIsbn(Request $request, DenormalizerInterface $denormalizerInterface, ManagerRegistry $doctrine, ApiManager $apiManager, ValidatorInterface $validator)
+    public function createItemByIsbn(Request $request, DenormalizerInterface $denormalizerInterface, ManagerRegistry $doctrine, ApiManager $apiManager, ValidatorInterface $validator, BookRepository $bookRepository, LibraryRepository $libraryRepository)
     {
 
         /** @var \App\Entity\User $user */
@@ -157,8 +159,6 @@ class BookController extends AbstractController
             );
         }
 
-        $library = new Library();
-
         // JSON with ISBN 
         $jsonContent = $request->getContent();
         $isbn = json_decode($jsonContent)->isbn;
@@ -169,6 +169,7 @@ class BookController extends AbstractController
         $bookArray = $apiManager->getBook($xml);
 
         //dd($bookArray);
+
         try {
             $book = $denormalizerInterface->denormalize($bookArray, Book::class);
         } catch (NotEncodableValueException $e) {
@@ -180,6 +181,43 @@ class BookController extends AbstractController
 
         $errors = $validator->validate($book);
 
+        $entityManager = $doctrine->getManager();
+
+        
+        $existingBookArray = $bookRepository->findByIsbn($book->getIsbn());
+        $existingBook = $existingBookArray[0];
+        if($existingBook){
+            $library = new Library();
+            $existingLibrary = $libraryRepository->findByLibrary($user, $existingBook);
+            
+            if($existingLibrary){
+                return $this->json(
+                    ['error' => 'Livre déjà dans la bibliothèque'],
+                    Response::HTTP_CONFLICT
+                );
+    
+            }
+
+            $library->setUser($user);
+            $library->setBook($existingBook);
+            $entityManager->persist($library);
+            $entityManager->flush();
+    
+            return $this->json(
+                $book,
+                Response::HTTP_CREATED,
+                [
+                    'Location' => $this->generateUrl('app_api_books_get_item', ['id' => $existingBook->getId()])
+                ],
+                ['groups' => [
+                    'get_books_collection',
+                    'get_authors_collection',
+                    'get_genres_collection'
+                ]]
+            );
+        } 
+        
+        
         if (count($errors) > 0) {
             $errorsClean = [];
             // @Retourner des erreurs de validation propres
@@ -187,13 +225,14 @@ class BookController extends AbstractController
             foreach ($errors as $error) {
                 $errorsClean[$error->getPropertyPath()][] = $error->getMessage();
             };
-
+            
             return $this->json($errorsClean, Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
 
-        $entityManager = $doctrine->getManager();
+        }
+    
         $entityManager->persist($book);
 
+        $library = new Library();
         $library->setUser($user);
         $library->setBook($book);
         $entityManager->persist($library);
