@@ -187,8 +187,9 @@ class BookController extends AbstractController
 
         
         $existingBookArray = $bookRepository->findByIsbn($book->getIsbn());
-        $existingBook = $existingBookArray[0];
-        if($existingBook){
+        
+        if($existingBookArray){
+            $existingBook = $existingBookArray[0];
             $library = new Library();
             $existingLibrary = $libraryRepository->findByLibrary($user, $existingBook);
 
@@ -197,7 +198,6 @@ class BookController extends AbstractController
                     ['error' => 'Livre déjà dans la bibliothèque'],
                     Response::HTTP_CONFLICT
                 );
-    
             }
 
             $library->setUser($user);
