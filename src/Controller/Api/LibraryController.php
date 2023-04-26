@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\Library;
 use App\Repository\BookRepository;
+use App\Repository\GenreRepository;
 use App\Repository\LibraryRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,7 +53,7 @@ class LibraryController extends AbstractController
      * 
      * @Route("/api/libraries", name="app_api_libraries_post", methods={"POST"})
      */
-    public function createItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, BookRepository $bookRepository)
+    public function createItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, BookRepository $bookRepository, GenreRepository $genreRepository)
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
@@ -70,6 +71,8 @@ class LibraryController extends AbstractController
         $contentForBook = json_decode($request->getContent(), true);
         $bookId = $contentForBook["book_id"];
         $book = $bookRepository->find($bookId);
+        $genreId = $contentForBook["genre_id"];
+        $genre = $genreRepository->find($genreId);
 
         try {
             $library = $serializer->deserialize($jsonContent, Library::class, 'json');
@@ -94,10 +97,11 @@ class LibraryController extends AbstractController
         }
 
         $entityManager = $doctrine->getManager();
+        $book->addGenre($genre);
 
         $library->setUser($user);
         $library->setBook($book);
-        //$book->addGenre(($library->getGenre()));
+        $library->setGenre($genre);
         $entityManager->persist($library);
         $entityManager->flush();
 
@@ -122,7 +126,7 @@ class LibraryController extends AbstractController
      * 
      * @Route("/api/libraries/{id<\d+>}", name="app_api_libraries_update", methods={"PUT"})
      */
-    public function updateItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, Library $library)
+    public function updateItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, Library $library, GenreRepository $genreRepository, BookRepository $bookRepository)
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
@@ -135,6 +139,12 @@ class LibraryController extends AbstractController
         }
 
         $jsonContent = $request->getContent();
+
+        $contentForBook = json_decode($request->getContent(), true);
+        $bookId = $contentForBook["book_id"];
+        $book = $bookRepository->find($bookId);
+        $genreId = $contentForBook["genre_id"];
+        $genre = $genreRepository->find($genreId);
 
         try {
             $newLibrary = $serializer->deserialize($jsonContent, Library::class, 'json');
@@ -156,7 +166,8 @@ class LibraryController extends AbstractController
 
             return $this->json($errorsClean, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-
+        
+        $book->addGenre($genre);
 
         $library->setComment($newLibrary->getComment());
         $library->setFavorite($newLibrary->isFavorite());
@@ -165,6 +176,7 @@ class LibraryController extends AbstractController
         $library->setQuote($newLibrary->getQuote());
         $library->setRate($newLibrary->getRate());
         $library->setWishlist($newLibrary->isWishlist());
+        $library->setGenre($genre);
 
 
         $entityManager = $doctrine->getManager();

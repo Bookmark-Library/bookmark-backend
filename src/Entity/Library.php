@@ -76,6 +76,7 @@ class Library
 
     /**
      * @ORM\ManyToOne(targetEntity=Genre::class, inversedBy="libraries")
+     * @Groups({"get_library_collection"})
      */
     private $genre;
 

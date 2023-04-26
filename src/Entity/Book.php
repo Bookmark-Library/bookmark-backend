@@ -100,6 +100,7 @@ class Book
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"get_books_collection"})
      */
     private $slug;
 
