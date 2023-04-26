@@ -15,6 +15,27 @@ class GenreController extends AbstractController
      */
     public function getCollection(GenreRepository $genreRepository): Response
     {
+        $genres = $genreRepository->findAll();
+
+        return $this->json(
+            $genres,
+            Response::HTTP_OK,
+            [],
+            [
+                'groups' => [
+                    'get_genres_collection',
+                    'get_books_collection',
+                    'get_authors_collection',
+                ]
+            ]
+        );
+    }
+
+    /**
+     * @Route("/api/genres/home", name="app_api_genres_home_get", methods={"GET"})
+     */
+    public function getHomeCollection(GenreRepository $genreRepository): Response
+    {
         $genres = $genreRepository->findByHomeOrder();
 
         return $this->json(
