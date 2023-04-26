@@ -13,15 +13,18 @@ use App\Entity\User;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class AppFixtures extends Fixture
 {
 
     private $connection;
+    private $slugger;
 
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, SluggerInterface $slugger)
     {
         $this->connection = $connection;
+        $this->slugger = $slugger;
     }
 
     private function truncate()
@@ -89,6 +92,7 @@ class AppFixtures extends Fixture
             $book->setPages($faker->randomNumber(3, false));
             $book->setPrice($faker->randomFloat(2) . " EUR");
             $book->setImage("https://catalogue.bnf.fr/couverture?&appName=NE&idArk=ark:/" .  $faker->randomNumber(5, true)  . "/cb44496975d&couverture=1");
+            $book->setSlug($this->slugger->slug($book->getTitle())->lower());
 
             for ($a = 1; $a <= mt_rand(1, 3); $a++) {
                 $randomAuthor = $authorsList[mt_rand(0, count($authorsList) - 1)];

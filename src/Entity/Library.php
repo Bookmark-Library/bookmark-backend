@@ -74,6 +74,11 @@ class Library
      */
     private $user;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Genre::class, inversedBy="libraries")
+     */
+    private $genre;
+
     public function __construct()
     {
         $this->finished = false;
@@ -193,6 +198,18 @@ class Library
     public function setFinished(bool $finished): self
     {
         $this->finished = $finished;
+
+        return $this;
+    }
+
+    public function getGenre(): ?Genre
+    {
+        return $this->genre;
+    }
+
+    public function setGenre(?Genre $genre): self
+    {
+        $this->genre = $genre;
 
         return $this;
     }

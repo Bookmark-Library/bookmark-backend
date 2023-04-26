@@ -97,7 +97,7 @@ class LibraryController extends AbstractController
 
         $library->setUser($user);
         $library->setBook($book);
-
+        //$book->addGenre(($library->getGenre()));
         $entityManager->persist($library);
         $entityManager->flush();
 

@@ -18,6 +18,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class BookController extends AbstractController
 {
@@ -76,11 +77,11 @@ class BookController extends AbstractController
     }
 
     /**
-     * Create book item
+     * Create book item 
      * 
      * @Route("/api/books", name="app_api_books_post", methods={"POST"})
      */
-    public function createItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator)
+    public function createItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, SluggerInterface $slugger)
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
@@ -119,6 +120,7 @@ class BookController extends AbstractController
         }
 
         $entityManager = $doctrine->getManager();
+        $book->setSlug($slugger->slug($book->getTitle())->lower());
         $entityManager->persist($book);
 
         $library->setUser($user);
@@ -146,7 +148,7 @@ class BookController extends AbstractController
      * 
      * @Route("/api/books/isbn", name="app_api_books_isbn_post", methods={"POST"})
      */
-    public function createItemByIsbn(Request $request, DenormalizerInterface $denormalizerInterface, ManagerRegistry $doctrine, ApiManager $apiManager, ValidatorInterface $validator, BookRepository $bookRepository, LibraryRepository $libraryRepository)
+    public function createItemByIsbn(Request $request, DenormalizerInterface $denormalizerInterface, ManagerRegistry $doctrine, ApiManager $apiManager, ValidatorInterface $validator, BookRepository $bookRepository, LibraryRepository $libraryRepository, SluggerInterface $slugger)
     {
 
         /** @var \App\Entity\User $user */
@@ -189,7 +191,7 @@ class BookController extends AbstractController
         if($existingBook){
             $library = new Library();
             $existingLibrary = $libraryRepository->findByLibrary($user, $existingBook);
-            
+
             if($existingLibrary){
                 return $this->json(
                     ['error' => 'Livre déjà dans la bibliothèque'],
@@ -217,7 +219,6 @@ class BookController extends AbstractController
             );
         } 
         
-        
         if (count($errors) > 0) {
             $errorsClean = [];
             // @Retourner des erreurs de validation propres
@@ -230,6 +231,7 @@ class BookController extends AbstractController
 
         }
     
+        $book->setSlug($slugger->slug($book->getTitle())->lower());
         $entityManager->persist($book);
 
         $library = new Library();

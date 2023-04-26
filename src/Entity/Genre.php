@@ -43,10 +43,16 @@ class Genre
      */
     private $books;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Library::class, mappedBy="genre")
+     */
+    private $libraries;
+
     public function __construct()
     {
         $this->books = new ArrayCollection();
         $this->homeOrder = 0;
+        $this->libraries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -98,6 +104,36 @@ class Genre
     public function removeBook(Book $book): self
     {
         $this->books->removeElement($book);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Library>
+     */
+    public function getLibraries(): Collection
+    {
+        return $this->libraries;
+    }
+
+    public function addLibrary(Library $library): self
+    {
+        if (!$this->libraries->contains($library)) {
+            $this->libraries[] = $library;
+            $library->setGenre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLibrary(Library $library): self
+    {
+        if ($this->libraries->removeElement($library)) {
+            // set the owning side to null (unless already changed)
+            if ($library->getGenre() === $this) {
+                $library->setGenre(null);
+            }
+        }
 
         return $this;
     }

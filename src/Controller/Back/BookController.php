@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @Route("/back/book")
@@ -28,13 +29,15 @@ class BookController extends AbstractController
     /**
      * @Route("/new", name="app_back_book_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, BookRepository $bookRepository): Response
+    public function new(Request $request, BookRepository $bookRepository, SluggerInterface $slugger): Response
     {
         $book = new Book();
         $form = $this->createForm(BookType::class, $book);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $book->setSlug($slugger->slug($book->getTitle())->lower());
+
             $bookRepository->add($book, true);
             $this->addFlash('success', "Le livre <b>{$book->getTitle()}</b> a bien été ajouté.");
 
@@ -60,12 +63,14 @@ class BookController extends AbstractController
     /**
      * @Route("/{id}/edit", name="app_back_book_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Book $book, BookRepository $bookRepository): Response
+    public function edit(Request $request, Book $book, BookRepository $bookRepository, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(BookType::class, $book);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $book->setSlug($slugger->slug($book->getTitle())->lower());
+
             $bookRepository->add($book, true);
 
             $this->addFlash('warning', "Le livre <b>{$book->getTitle()}</b> a bien été modifié.");
