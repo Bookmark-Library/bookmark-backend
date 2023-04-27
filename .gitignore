@@ -22,3 +22,7 @@
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
+
+###> User's avatars ###
+/public/assets/images/avatars
+###< User's avatars ###

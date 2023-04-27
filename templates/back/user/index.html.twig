@@ -26,7 +26,12 @@
 					<td>{{ user.id }}</td>
 					<td>{{ user.email }}</td>
 					<td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-					<td>{{ user.avatar }}</td>
+					<td>
+					{% if user.avatar is not null %}
+					<img style="width: 100px" src="{{ asset('assets/images/avatars/' ~ user.avatar) }}" alt="avatar">
+
+					{% endif %}
+					</td>
 					<td>{{ user.alias }}</td>
 					<td>
 						<a href="{{ path('app_back_user_show', {'id': user.id}) }}" class="btn btn-primary">Voir</a>
