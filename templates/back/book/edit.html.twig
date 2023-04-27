@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier le livre
+{% block title %}Modifier le livre : "{{ book.title }}"
 {% endblock %}
 
 {% block body %}
-	<h1>Modifier le livre</h1>
+	<h1>Modifier le livre : "{{ book.title }}"</h1>
 
 	{{ include('back/book/_form.html.twig', {'button_label': 'Modifier'}) }}
 

@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier l'éditorial
+{% block title %}Modifier l'éditorial : "{{ editorial.title }}"
 {% endblock %}
 
 {% block body %}
-	<h1>Modifier l'éditorial</h1>
+	<h1>Modifier l'éditorial : "{{ editorial.title }}"</h1>
 
 	{{ include('back/editorial/_form.html.twig', {'button_label': 'Modifier'}) }}
 

@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier le genre
+{% block title %}Modifier le genre : "{{ genre.name }}"
 {% endblock %}
 
 {% block body %}
-	<h1>Modifier le genre
+	<h1>Modifier le genre : "{{ genre.name }}"
 	</h1>
 
 	{{ include('back/genre/_form.html.twig', {'button_label': 'Modifier'}) }}

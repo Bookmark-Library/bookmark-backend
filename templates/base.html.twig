@@ -28,14 +28,11 @@
 	</head>
 	<body>
 
-		<!-- Nav -->
 		{% block nav %}
-
 			<nav class="navbar navbar-expand-lg navbar-light">
 				<div class="container-fluid">
 					<a href="#" class="d-flex align-items-center mb-2 mb-lg-0 text-decoration-none header-logo">
 						<img src="{{asset('assets/images/bookmark-logo.svg')}}" height="70" alt="Logo BookMark">
-
 					</a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
 						<span class="navbar-toggler-icon"></span>
@@ -61,7 +58,6 @@
 									Editorial</a>
 							</li>
 						</ul>
-						{# menu user #}
 						<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 							<li class="nav-item dropdown">
 								<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
@@ -78,13 +74,13 @@
 											{% endif %}
 										</h6>
 									</li>
-									<li>
-										<a class="dropdown-item" href="#">Profil</a>
-									</li>
+									{# <li>
+									<a class="dropdown-item" href="#">Profil</a>
+									</li>  #}
 								</ul>
 							</li>
 							<li>
-								<a class="dropdown-item" href=" {{ path('app_logout') }}">Déconnexion</a>
+								<a class="btn btn-danger" href=" {{ path('app_logout') }}">Déconnexion</a>
 							</li>
 						</ul>
 

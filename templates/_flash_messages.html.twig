@@ -3,11 +3,7 @@
 	{% for message in messages %}
 		<div
 			class="alert alert-{{ label }} alert-dismissible fade show mt-2" role="alert">
-			{#
-						            on affiche le HTML brut (raw)
-						            mais au préalable on supprime toutes les balises HTML sauf "b"
-						            cela permet de supprimer les balises "script" qui autorisent les attaques XSS
-						        #}
+			{# display raw HTML and delete all script (XSS attacks) and HTML tags except 'b'#}
 			{{ message|striptags('<b>')|raw }}
 			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 		</div>

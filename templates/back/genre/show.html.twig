@@ -1,12 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Genre
-	{{ genre.id }}
+{% block title %}
+	{{ genre.name }}
 {% endblock %}
 
 {% block body %}
-	<h1>Genre
-		{{ genre.id }}</h1>
+	<h1>{{ genre.name }}</h1>
 
 	<table class="table">
 		<tbody>
@@ -19,7 +18,7 @@
 				<td>{{ genre.name }}</td>
 			</tr>
 			<tr>
-				<th>Ordre Page d'accueil</th>
+				<th>Ordre en page d'accueil</th>
 				<td>{{ genre.homeOrder }}</td>
 			</tr>
 		</tbody>

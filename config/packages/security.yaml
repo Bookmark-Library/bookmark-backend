@@ -17,7 +17,7 @@ security:
 
         # API login
         login:
-            # ici on definit le endpoint pour recuperer le token
+            # endpoint for token
             pattern: ^/api/login
             stateless: true
             json_login:
@@ -25,7 +25,6 @@ security:
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
-        # Le firewall de notre API => à adapter selon nos besoins
         #api_secure:
         #    pattern:   ^/api/secure
         #    stateless: true
