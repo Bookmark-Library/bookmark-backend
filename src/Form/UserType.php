@@ -13,6 +13,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
@@ -85,7 +86,21 @@ class UserType extends AbstractType
             })
 
             ->add('alias', TextType::class)
-            ->add('avatar', TextType::class);
+            ->add('avatar', FileType::class, [
+                'label' => 'Avatar',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    // in recents update, use "extensions" for security purpose
+                    new File([
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png'
+                        ],
+                        'mimeTypesMessage' => 'Merci de télécharger une image valide',
+                ])
+                    ], 
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

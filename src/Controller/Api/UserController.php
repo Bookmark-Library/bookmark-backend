@@ -4,8 +4,10 @@ namespace App\Controller\Api;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\FileUploader;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -48,7 +50,7 @@ class UserController extends AbstractController
      * 
      * @Route("/api/users", name="app_api_users_post", methods={"POST"})
      */
-    public function createItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher)
+    public function createItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher, FileUploader $fileUploader)
     {
         $jsonContent = $request->getContent();
 
@@ -72,6 +74,14 @@ class UserController extends AbstractController
             };
 
             return $this->json($errorsClean, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // AVATAR
+        /** @var UploadedFile $avatarFile */
+        $user->get('avatar')->getData();
+        if ($avatarFile) {
+            $avatarFileName = $fileUploader->upload($avatarFile);
+            $user->setAvatar($avatarFileName);
         }
 
         // Password hashed
@@ -156,7 +166,7 @@ class UserController extends AbstractController
         );
     }
 
-     /**
+    /**
      * Update user's password
      * 
      * @Route("/api/users/password", name="app_api_users_password_update", methods={"PUT"})
@@ -220,7 +230,7 @@ class UserController extends AbstractController
                 'get_users_item'
             ]]
         );
-    }   
+    }
 
     /**
      * Delete user item
