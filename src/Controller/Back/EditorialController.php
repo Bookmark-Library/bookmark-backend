@@ -5,7 +5,9 @@ namespace App\Controller\Back;
 use App\Entity\Editorial;
 use App\Form\EditorialType;
 use App\Repository\EditorialRepository;
+use App\Service\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,13 +30,20 @@ class EditorialController extends AbstractController
     /**
      * @Route("/new", name="app_back_editorial_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, EditorialRepository $editorialRepository): Response
+    public function new(Request $request, EditorialRepository $editorialRepository, FileUploader $fileUploader): Response
     {
         $editorial = new Editorial();
         $form = $this->createForm(EditorialType::class, $editorial);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $avatarFile */
+            $editoImage = $form->get('image')->getData();
+            if ($editoImage) {
+                $imageFileName = $fileUploader->upload($editoImage);
+                $editorial->setImage($imageFileName);
+            }
+
             $editorialRepository->add($editorial, true);
 
             $this->addFlash('success', "L'éditorial <b>{$editorial->getTitle()}</b> a bien été ajouté.");
@@ -85,12 +94,19 @@ class EditorialController extends AbstractController
     /**
      * @Route("/{id}/edit", name="app_back_editorial_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Editorial $editorial, EditorialRepository $editorialRepository): Response
+    public function edit(Request $request, Editorial $editorial, EditorialRepository $editorialRepository, FileUploader $fileUploader): Response
     {
         $form = $this->createForm(EditorialType::class, $editorial);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $avatarFile */
+            $editoImage = $form->get('image')->getData();
+            if ($editoImage) {
+                $imageFileName = $fileUploader->upload($editoImage);
+                $editorial->setImage($imageFileName);
+            }
+
             $editorialRepository->add($editorial, true);
 
             $this->addFlash('warning', "L'éditorial <b>{$editorial->getTitle()}</b> a bien été modifié.");

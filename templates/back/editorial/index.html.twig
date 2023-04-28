@@ -27,7 +27,13 @@
 					<td>{{ editorial.id }}</td>
 					<td>{{ editorial.title }}</td>
 					<td>{{ editorial.content }}</td>
-					<td>{{ editorial.image }}</td>
+					<td>
+						{% if editorial.image is not null %}
+							<img style="width: 100px" src="{{ asset('assets/images/avatars/' ~ editorial.image) }}" alt="image">
+
+						{% endif %}
+					</td>
+
 					<td>{{ editorial.active }}</td>
 					<td>
 						<a href="{{ path('app_back_editorial_show', {'id': editorial.id}) }}" class="btn btn-primary">Voir</a>

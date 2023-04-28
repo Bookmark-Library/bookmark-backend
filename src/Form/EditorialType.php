@@ -4,11 +4,13 @@ namespace App\Form;
 
 use App\Entity\Editorial;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class EditorialType extends AbstractType
 {
@@ -21,9 +23,22 @@ class EditorialType extends AbstractType
             ->add('content', TextareaType::class, [
                 'label' => 'Contenu'
             ])
-            ->add('image', UrlType::class, [
-                'label' => 'Image'
+            ->add('image', FileType::class, [
+                'label' => 'Image',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    // in recents update, use "extensions" for security purpose
+                    new File([
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png'
+                        ],
+                        'mimeTypesMessage' => 'Merci de télécharger une image valide',
+                    ])
+                ],
             ]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void

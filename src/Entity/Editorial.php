@@ -33,6 +33,12 @@ class Editorial
     /**
      * @ORM\Column(type="string", length=4000)
      * @Assert\NotBlank
+     * @Assert\Length(
+     *   min = 2,
+     *   max = 550,
+     *   minMessage = "Votre contenu doit faire au minimum {{ limit }} caractères",
+     *   maxMessage = "Votre contenu doit faire au maximum {{ limit }} caractères"
+     * )
      * @Groups({"get_editorials_collection"})
      */
     private $content;
@@ -45,7 +51,6 @@ class Editorial
 
     /**
      * @ORM\Column(type="boolean", options={"default": 0})
-     * @Assert\NotBlank
      * @Groups({"get_editorials_collection"})
      */
     private $active;

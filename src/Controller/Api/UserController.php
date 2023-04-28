@@ -243,11 +243,11 @@ class UserController extends AbstractController
        
         $image = $request->files->get('file');
 
+        // rename file
         $fileName = uniqid().'.' . $image->getClientOriginalName();
 
-        // enregistrement de l'image dans le dossier public du serveur
+        // save image in avatar's directory
         $image->move($params->get('avatars_directory'), $fileName);
-
 
         $connectedUser->setAvatar($fileName);
 
