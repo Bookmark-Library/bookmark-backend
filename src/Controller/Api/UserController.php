@@ -184,7 +184,7 @@ class UserController extends AbstractController
         if(!password_verify($oldPassword, $connectedUser->getPassword())){
             return $this->json(
                 ['error' => 'Ancien mot de passe invalide !'],
-                Response::HTTP_NOT_FOUND
+                Response::HTTP_CONFLICT
             );
         }
 
