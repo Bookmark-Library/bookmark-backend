@@ -7,6 +7,7 @@ use App\Repository\UserRepository;
 use App\Service\FileUploader;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -74,14 +75,6 @@ class UserController extends AbstractController
             };
 
             return $this->json($errorsClean, Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        // AVATAR
-        /** @var UploadedFile $avatarFile */
-        $user->get('avatar')->getData();
-        if ($avatarFile) {
-            $avatarFileName = $fileUploader->upload($avatarFile);
-            $user->setAvatar($avatarFileName);
         }
 
         // Password hashed
@@ -171,7 +164,7 @@ class UserController extends AbstractController
      * 
      * @Route("/api/users/password", name="app_api_users_password_update", methods={"PUT"})
      */
-    public function updatePAssword(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher)
+    public function updatePassword(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher)
     {
         /** @var \App\Entity\User $connectedUser */
         $connectedUser = $this->getUser();
@@ -207,8 +200,6 @@ class UserController extends AbstractController
             return $this->json($errorsClean, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        // Constraint 
-
 
         // Password hashed
         $hashedPassword = $userPasswordHasher->hashPassword($user, $user->getPassword());
@@ -231,6 +222,41 @@ class UserController extends AbstractController
             ]]
         );
     }
+
+
+    /**
+     * Update user avatar
+     * 
+     * @Route("/api/users/avatar", name="app_api_users_avatar_update", methods={"PUT"})
+     */
+    public function updateAvatar(Request $request, ParameterBagInterface $params, ManagerRegistry $doctrine)
+    {
+        /** @var \App\Entity\User $connectedUser */
+        $connectedUser = $this->getUser();
+
+        if ($connectedUser === null) {
+            return $this->json(
+                ['error' => 'Utilisateur non trouvé !'],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $image = $request->files->get('file');
+
+        // enregistrement de l'image dans le dossier public du serveur
+        $image->move($params->get('public') . '/assets/images/avatars', $image->getClientOriginalName());
+
+        $connectedUser->setAvatar($image);
+
+        $entityManager = $doctrine->getManager();
+        $entityManager->persist($connectedUser);
+        $entityManager->flush();
+
+        return $this->json([
+            'message' => 'Image uploaded successfully.'
+        ]);
+    }
+
 
     /**
      * Delete user item
