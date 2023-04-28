@@ -227,7 +227,7 @@ class UserController extends AbstractController
     /**
      * Update user avatar
      * 
-     * @Route("/api/users/avatar", name="app_api_users_avatar_update", methods={"PUT"})
+     * @Route("/api/users/avatar", name="app_api_users_avatar_update", methods={"POST"})
      */
     public function updateAvatar(Request $request, ParameterBagInterface $params, ManagerRegistry $doctrine)
     {
@@ -240,13 +240,16 @@ class UserController extends AbstractController
                 Response::HTTP_NOT_FOUND
             );
         }
-
+       
         $image = $request->files->get('file');
 
-        // enregistrement de l'image dans le dossier public du serveur
-        $image->move($params->get('public') . '/assets/images/avatars', $image->getClientOriginalName());
+        $fileName = uniqid().'.' . $image->getClientOriginalName();
 
-        $connectedUser->setAvatar($image);
+        // enregistrement de l'image dans le dossier public du serveur
+        $image->move($params->get('avatars_directory'), $fileName);
+
+
+        $connectedUser->setAvatar($fileName);
 
         $entityManager = $doctrine->getManager();
         $entityManager->persist($connectedUser);
