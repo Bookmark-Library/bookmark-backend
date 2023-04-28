@@ -178,6 +178,16 @@ class UserController extends AbstractController
 
         $jsonContent = $request->getContent();
 
+        $contentForPassword = json_decode($request->getContent(), true);
+        $oldPassword = $contentForPassword["password_check"];
+        
+        if(!password_verify($oldPassword, $connectedUser->getPassword())){
+            return $this->json(
+                ['error' => 'Ancien mot de passe invalide !'],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
         try {
             $user = $serializer->deserialize($jsonContent, User::class, 'json');
         } catch (NotEncodableValueException $e) {
