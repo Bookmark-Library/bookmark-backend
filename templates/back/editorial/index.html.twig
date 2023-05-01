@@ -34,7 +34,12 @@
 						{% endif %}
 					</td>
 
-					<td>{{ editorial.active }}</td>
+					<td>
+						<div class="form-check form-switch">
+							<input class="form-check-input" type="checkbox" role="switch" id="switch{{ editorial.id }}" {{ editorial.active ? "checked" : "" }} disabled>
+							<label class="form-check-label" for="switch{{ editorial.id }}"></label>
+						</div>
+					</td>
 					<td>
 						<div class="d-md-flex">
 							<a href="{{ path('app_back_editorial_show', {'id': editorial.id}) }}" class="btn btn-primary me-1">Voir</a>
