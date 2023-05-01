@@ -167,11 +167,8 @@ class BookController extends AbstractController
         $bookArray = $apiManager->getBook($xml);
 
         try {
-            dd($bookArray);
             $book = $denormalizerInterface->denormalize($bookArray, Book::class);
-
         } catch (NotEncodableValueException $e) {
-            dd('ici');
             return $this->json(
                 ['error' => 'Tableau invalide'],
                 Response::HTTP_UNPROCESSABLE_ENTITY
