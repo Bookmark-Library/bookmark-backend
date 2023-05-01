@@ -13,7 +13,7 @@
 
 	<table class="table table-striped">
 		<thead>
-			<tr>
+			<tr class="text-center">
 				<th>Id</th>
 				<th>Nom</th>
 				<th>Ordre en page d'accueil</th>
@@ -22,7 +22,7 @@
 		</thead>
 		<tbody>
 			{% for genre in genres %}
-				<tr>
+				<tr class="text-center">
 					<td>{{ genre.id }}</td>
 					<td>{{ genre.name }}</td>
 					<td>{{ genre.homeOrder }}</td>

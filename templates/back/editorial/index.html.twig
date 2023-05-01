@@ -12,7 +12,7 @@
 
 	<table class="table table-striped">
 		<thead>
-			<tr>
+			<tr class="text-center">
 				<th>Id</th>
 				<th>Titre</th>
 				<th>Contenu</th>
@@ -23,7 +23,7 @@
 		</thead>
 		<tbody>
 			{% for editorial in editorials %}
-				<tr>
+				<tr class="text-center">
 					<td>{{ editorial.id }}</td>
 					<td>{{ editorial.title }}</td>
 					<td>{{ editorial.content }}</td>
@@ -35,9 +35,11 @@
 					</td>
 
 					<td>{{ editorial.active }}</td>
-					<td class="d-md-flex">
-						<a href="{{ path('app_back_editorial_show', {'id': editorial.id}) }}" class="btn btn-primary">Voir</a>
-						<a href="{{ path('app_back_editorial_edit', {'id': editorial.id}) }}" class="btn btn-warning">Modifier</a>
+					<td>
+						<div class="d-md-flex">
+							<a href="{{ path('app_back_editorial_show', {'id': editorial.id}) }}" class="btn btn-primary me-1">Voir</a>
+							<a href="{{ path('app_back_editorial_edit', {'id': editorial.id}) }}" class="btn btn-warning">Modifier</a>
+						</div>
 					</td>
 				</tr>
 			{% else %}

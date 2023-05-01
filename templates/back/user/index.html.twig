@@ -11,7 +11,7 @@
 
 	<table class="table table-striped">
 		<thead>
-			<tr>
+			<tr class="text-center">
 				<th>Id</th>
 				<th>Email</th>
 				<th>Roles</th>
@@ -22,15 +22,15 @@
 		</thead>
 		<tbody>
 			{% for user in users %}
-				<tr>
+				<tr class="text-center">
 					<td>{{ user.id }}</td>
 					<td>{{ user.email }}</td>
 					<td>{{ user.roles ? user.roles|json_encode : '' }}</td>
 					<td>
-					{% if user.avatar is not null %}
-					<img style="width: 100px" src="{{ asset('assets/images/avatars/' ~ user.avatar) }}" alt="avatar">
+						{% if user.avatar is not null %}
+							<img style="width: 100px" src="{{ asset('assets/images/avatars/' ~ user.avatar) }}" alt="avatar">
 
-					{% endif %}
+						{% endif %}
 					</td>
 					<td>{{ user.alias }}</td>
 					<td>
