@@ -167,7 +167,7 @@ class BookController extends AbstractController
         $bookArray = $apiManager->getBook($xml);
 
         try {
-            //dd($bookArray);
+            dd($bookArray);
             $book = $denormalizerInterface->denormalize($bookArray, Book::class);
 
         } catch (NotEncodableValueException $e) {
