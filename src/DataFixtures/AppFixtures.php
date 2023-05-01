@@ -29,10 +29,9 @@ class AppFixtures extends Fixture
 
     private function truncate()
     {
-        // On passe en mode SQL ! On cause avec MySQL
-        // Désactivation la vérification des contraintes FK
+        // Disabling FK constraint checking 
         $this->connection->executeQuery('SET foreign_key_checks = 0');
-        // On tronque
+        // Truncation
         $this->connection->executeQuery('TRUNCATE TABLE author');
         $this->connection->executeQuery('TRUNCATE TABLE book');
         $this->connection->executeQuery('TRUNCATE TABLE genre');
@@ -44,24 +43,26 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        // On TRUNCATE manuellement
+        // Truncation
         $this->truncate();
 
+        // French Faker
         $faker = Factory::create('fr_FR');
 
         // Provider
         $bookmarkProvider = new BookmarkProvider();
         $faker->addProvider($bookmarkProvider);
 
-        $providerGenres = $bookmarkProvider->allBookGenre();
-        $genresList = [];
-
+        // Create Editorials
         $editorial = new Editorial();
         $editorial->setTitle($faker->sentence(mt_rand(1, 4)));
         $editorial->setContent($faker->text());
         $editorial->setImage($faker->imageUrl());
-
         $manager->persist($editorial);
+
+        // Create Genres
+        $providerGenres = $bookmarkProvider->allBookGenre();
+        $genresList = [];
 
         for ($g = 0; $g < count($providerGenres); $g++) {
             $genre = new Genre();
@@ -70,16 +71,17 @@ class AppFixtures extends Fixture
             $manager->persist($genre);
         }
 
+        // Create Authors
         $authorsList = [];
         for ($a = 1; $a <= 15; $a++) {
             $author = new Author();
             $author->setLastname($faker->lastName());
             $author->setFirstname($faker->firstName());
             $authorsList[] = $author;
-
             $manager->persist($author);
         }
 
+        // Create Books
         $booksList = [];
         for ($b = 1; $b <= 25; $b++) {
             $book = new Book();
@@ -94,11 +96,13 @@ class AppFixtures extends Fixture
             $book->setImage("https://catalogue.bnf.fr/couverture?&appName=NE&idArk=ark:/" .  $faker->randomNumber(5, true)  . "/cb44496975d&couverture=1");
             $book->setSlug($this->slugger->slug($book->getTitle())->lower());
 
+            // Add authors to book
             for ($a = 1; $a <= mt_rand(1, 3); $a++) {
                 $randomAuthor = $authorsList[mt_rand(0, count($authorsList) - 1)];
                 $book->addAuthor($randomAuthor);
             }
 
+            // Add genres to book
             for ($g = 1; $g <= mt_rand(1, 3); $g++) {
                 $randomGenre = $genresList[mt_rand(0, count($genresList) - 1)];
                 $book->addGenre($randomGenre);
@@ -109,6 +113,7 @@ class AppFixtures extends Fixture
             $manager->persist($book);
         }
 
+        // Create USER
         $user = new User();
         $user->setEmail('user@user.com');
         $user->setAlias('user');
@@ -116,6 +121,7 @@ class AppFixtures extends Fixture
         $user->setRoles(["ROLE_USER"]);
         $manager->persist($user);
 
+        // add Library to USER
         for ($i = 0; $i <= 7; $i++) {
             $randomBook = $faker->unique()->randomElement($booksList);
             $library = new Library();
@@ -131,50 +137,7 @@ class AppFixtures extends Fixture
             $manager->persist($library);
         }
 
-        $test = new User();
-        $test->setEmail('test@test.com');
-        $test->setAlias('test');
-        $test->setPassword('$2y$13$NgnJKCnuzJ0UQwt1zkuTAOU8LlgHahmi6bEo/vWZF8jbVoUfxDIpC');
-        $test->setRoles(["ROLE_USER"]);
-        $manager->persist($test);
-
-        for ($i = 0; $i <= 7; $i++) {
-            $randomBook = $faker->unique()->randomElement($booksList);
-            $library = new Library();
-            $library->setUser($test);
-            $library->setBook($randomBook);
-            $library->setComment($faker->text());
-            $library->setQuote($faker->text());
-            $library->setRate(mt_rand(0, 5));
-            $library->setFavorite($faker->boolean());
-            $library->setPurchased($faker->boolean());
-            $library->setWishlist($faker->boolean());
-            $library->setFinished($faker->boolean());
-            $manager->persist($library);
-        }
-
-        $kenny = new User();
-        $kenny->setEmail('kenny@kenny.com');
-        $kenny->setAlias('kenny');
-        $kenny->setPassword('$2y$13$s9B6BDb4IiTFK7HIHoVIGeMOENvnRwr/NCmAGaV.kXyjJ6zQxiJVy');
-        $kenny->setRoles(["ROLE_USER"]);
-        $manager->persist($kenny);
-
-        for ($i = 0; $i <= 7; $i++) {
-            $randomBook = $faker->unique()->randomElement($booksList);
-            $library = new Library();
-            $library->setUser($kenny);
-            $library->setBook($randomBook);
-            $library->setComment($faker->text());
-            $library->setQuote($faker->text());
-            $library->setRate(mt_rand(0, 5));
-            $library->setFavorite($faker->boolean());
-            $library->setPurchased($faker->boolean());
-            $library->setWishlist($faker->boolean());
-            $library->setFinished($faker->boolean());
-            $manager->persist($library);
-        }
-
+        // Create EDITOR
         $editor = new User();
         $editor->setEmail('editor@editor.com');
         $editor->setAlias('editor');
@@ -182,13 +145,13 @@ class AppFixtures extends Fixture
         $editor->setRoles(["ROLE_EDITOR"]);
         $manager->persist($editor);
 
+        // Create ADMIN
         $admin = new User();
         $admin->setEmail('admin@admin.com');
         $admin->setAlias('admin');
         $admin->setPassword('$2y$13$vMnkj4LRxWckp/O251JkBueRG8z6nPTwODUI5hT13Sd8TwUqRolbK');
         $admin->setRoles(["ROLE_ADMIN"]);
         $manager->persist($admin);
-
 
         $manager->flush();
     }

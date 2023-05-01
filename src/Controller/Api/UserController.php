@@ -68,7 +68,6 @@ class UserController extends AbstractController
 
         if (count($errors) > 0) {
             $errorsClean = [];
-            // @Retourner des erreurs de validation propres
             /** @var ConstraintViolation $error */
             foreach ($errors as $error) {
                 $errorsClean[$error->getPropertyPath()][] = $error->getMessage();
@@ -199,7 +198,6 @@ class UserController extends AbstractController
 
         if (count($errors) > 0) {
             $errorsClean = [];
-            // @Retourner des erreurs de validation propres
             /** @var ConstraintViolation $error */
             foreach ($errors as $error) {
                 $errorsClean[$error->getPropertyPath()][] = $error->getMessage();

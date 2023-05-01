@@ -11,7 +11,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
@@ -65,7 +64,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"get_users_item"})
      */
     private $libraries;
-
 
     public function __construct()
     {
@@ -171,7 +169,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
 
     /**
      * @return Collection<int, Library>

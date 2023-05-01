@@ -27,8 +27,8 @@
 					<td>{{ book.title }}</td>
 					<td>{{ book.editor }}</td>
 					<td>{{ book.isbn }}</td>
-					<td>
-						<a href="{{ path('app_back_book_show', {'id': book.id}) }}" class="btn btn-primary mb-1">Voir</a>
+					<td class="d-md-flex">
+						<a href="{{ path('app_back_book_show', {'id': book.id}) }}" class="btn btn-primary me-1">Voir</a>
 						<a href="{{ path('app_back_book_edit', {'id': book.id}) }}" class="btn btn-warning">Modifier</a>
 					</td>
 				</tr>

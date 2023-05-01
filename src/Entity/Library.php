@@ -93,7 +93,6 @@ class Library
         return $this->id;
     }
 
-
     public function getComment(): ?string
     {
         return $this->comment;
@@ -153,7 +152,6 @@ class Library
 
         return $this;
     }
-
 
     public function isPurchased(): ?bool
     {

@@ -81,7 +81,6 @@ class Book
      */
     private $publicationDate;
 
-
     /**
      * @ORM\ManyToMany(targetEntity=Author::class, mappedBy="books", cascade={"persist"})
      * @Groups({"get_books_collection"})
@@ -103,7 +102,6 @@ class Book
      * @Groups({"get_books_collection"})
      */
     private $slug;
-
 
     public function __construct()
     {
@@ -153,7 +151,6 @@ class Book
         return $this;
     }
 
-
     public function getSummary(): ?string
     {
         return $this->summary;
@@ -165,7 +162,6 @@ class Book
 
         return $this;
     }
-
 
     public function getPages(): ?int
     {
@@ -274,8 +270,6 @@ class Book
 
         return $this;
     }
-
-
 
     public function getPrice(): ?string
     {

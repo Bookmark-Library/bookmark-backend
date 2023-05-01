@@ -10,6 +10,8 @@
 		<!-- Bootstrap icons -->
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
+		<link rel="stylesheet" href="{{ asset('assets/css/bookmark.css') }}">
+
 		<title>
 			{% block title %}BookMark
 			{% endblock %}
@@ -29,7 +31,7 @@
 	<body>
 
 		{% block nav %}
-			<nav class="navbar navbar-expand-lg navbar-light">
+			<nav class="navbar navbar-expand-lg navbar-dark header-bg">
 				<div class="container-fluid">
 					<a href="#" class="d-flex align-items-center mb-2 mb-lg-0 text-decoration-none header-logo">
 						<img src="{{asset('assets/images/bookmark-logo.svg')}}" height="70" alt="Logo BookMark">
@@ -41,20 +43,20 @@
 						<ul class="navbar-nav me-auto  mb-2 mb-lg-0">
 							{% if is_granted("ROLE_ADMIN") %}
 								<li class="nav-item">
-									<a class="nav-link text-black " href="{{ path("app_back_user_index")}}">
+									<a class="nav-link" href="{{ path("app_back_user_index")}}">
 										Utilisateurs</a>
 								</li>
 							{% endif %}
 							<li class="nav-item">
-								<a class="nav-link text-black" href="{{ path("app_back_book_index")}}">
+								<a class="nav-link" href="{{ path("app_back_book_index")}}">
 									Livres</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link text-black" href="{{ path("app_back_genre_index")}}">
+								<a class="nav-link" href="{{ path("app_back_genre_index")}}">
 									Genres</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link text-black" href="{{ path("app_back_editorial_index")}}">
+								<a class="nav-link" href="{{ path("app_back_editorial_index")}}">
 									Editorial</a>
 							</li>
 						</ul>
@@ -75,8 +77,8 @@
 										</h6>
 									</li>
 									{# <li>
-									<a class="dropdown-item" href="#">Profil</a>
-									</li>  #}
+																		<a class="dropdown-item" href="#">Profil</a>
+																		</li>  #}
 								</ul>
 							</li>
 							<li>

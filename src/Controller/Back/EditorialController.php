@@ -58,7 +58,7 @@ class EditorialController extends AbstractController
     }
 
     /**
-     * @Route("/homeActive", name="app_back_editorial_home_active", methods={"GET", "POST"})
+     * @Route("/home-active", name="app_back_editorial_home_active", methods={"GET", "POST"})
      */
     public function homeOrder(EditorialRepository $editorialRepository, Request $request): Response
     {
