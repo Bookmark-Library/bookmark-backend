@@ -17,7 +17,7 @@ class ApiManager
     }
 
     /**
-     * Give back SimpleXMLElement for the given book
+     * SimpleXMLElement for the given book
      * 
      * @param string $isbn
      * 
@@ -32,14 +32,11 @@ class ApiManager
 
         // Get content form the API in xml
         $content = $response->getContent();
-        //dd($content);
-
 
         // Transform xml content in SimpleXMLElement in order to access data
         $responseToSimpleXMLElement = new SimpleXMLElement($content);
 
         // Namespace recording for namespace in API's xml file 
-
         $ns = $responseToSimpleXMLElement->getDocNamespaces(true);
         foreach ($ns as $prefix => $URI) {
             $responseToSimpleXMLElement->registerXPathNamespace($prefix, $URI);
@@ -50,17 +47,22 @@ class ApiManager
     }
 
     /**
-     * Give Book in array
+     * Book in array
      * 
      * @param SimpleXMLElement $xml
      * 
-     * @return array $book
+     * @return array|null $book
      */
     public function getBook($xml)
     {
         $book = [];
         $isbn = $this->getISBN($xml);
         $title = $this->getTitle($xml);
+
+        if($title === null){
+            return null;
+        }
+    
         $author = $this->getAuthor($xml);
         $editor = $this->getEditor($xml);
         $collection = $this->getCollection($xml);
@@ -85,17 +87,15 @@ class ApiManager
     }
 
     /**
-     * Give back ISBN for the given book
+     * ISBN for the given book
      * 
      * @param SimpleXMLElement $xml
      * 
-     * @return string $isbn 
+     * @return string|null $isbn 
      */
     private function getISBN($xml)
     {
-        // ISBN : "//mxc:datafield[@tag='073']/mxc:subfield[@code='a']"
         $isbnArray = $xml->xpath("//mxc:datafield[@tag='073']/mxc:subfield[@code='a']");
-        // Does the isbn exist ?
         if (!array_key_exists(0, $isbnArray)) {
             $isbn = null;
         } else {
@@ -106,78 +106,73 @@ class ApiManager
     }
 
     /**
-     * Give back the title for the given book
+     * Title for the given book
      * 
      * @param SimpleXMLElement $xml
      * 
-     * @return string $title
+     * @return string|null $title
      */
     private function getTitle($xml)
     {
-        // Title: "//mxc:datafield[@tag='200']/mxc:subfield[@code='a']"
+        // Title
         $titleArray = $xml->xpath("//mxc:datafield[@tag='200']/mxc:subfield[@code='a']");
-
         if (!array_key_exists(0, $titleArray)) {
             $title = null;
         } else {
             $title = $titleArray[0]->__toString();
         }
 
-        // Volume Title: "//mxc:datafield[@tag='200']/mxc:subfield[@code='h']"
-        // Parent Title: "//mxc:datafield[@tag='225']/mxc:subfield[@code='a']"
-        // Volume Title: "//mxc:datafield[@tag='225']/mxc:subfield[@code='v']"
-
+        // Title volume number & Title parent's title
+        // First way
         $volumeArray = $xml->xpath("//mxc:datafield[@tag='200']/mxc:subfield[@code='h']");
         if (!array_key_exists(0, $volumeArray)) {
+            // Second way if first one doesn't exist
             $parentArray = $xml->xpath("//mxc:datafield[@tag='225']/mxc:subfield[@code='a']");
             $volumeArrayBis = $xml->xpath("//mxc:datafield[@tag='225']/mxc:subfield[@code='v']");
 
+            // Does parent exist in second way ?
             if (!array_key_exists(0, $parentArray)) {
                 $parent = null;
             } else {
-                //$volume = $parentArray[0]->__toString() . " (" . $volumeArrayBis[0]->__toString() . ")";
                 $parent = $parentArray[0]->__toString();
             }
 
+            // Does volume exist in second way ?
             if (!array_key_exists(0, $volumeArrayBis)) {
                 $volume = null;
             } else {
                 $volume = $volumeArrayBis[0]->__toString();
             }
-
         } else {
+            // First way values
             $volume = $volumeArray[0]->__toString();
             $parent = null;
         }
-        
-        if ($volume === null && $parent === null) {     
+
+        if ($volume === null && $parent === null) {
             return $title;
         } elseif ($volume === null) {
-            return $title . " - " . $parent ;
+            return $title . " - " . $parent;
         } elseif ($parent === null) {
             return $title . " (" . $volume . ")";
-        }
-        else {
+        } else {
             return $title . " - " . $parent . " (" . $volume . ")";
         }
     }
 
     /**
-     * Give back the author for the given book
+     * Author for the given book
      * 
      * @param SimpleXMLElement $xml
      * 
-     * @return array $author
+     * @return array|null $author
      */
     private function getAuthor($xml)
     {
-        // Author lastname : "//mxc:datafield[@tag='700']/mxc:subfield[@code='a']"
-        // Author firstname : "//mxc:datafield[@tag='700']/mxc:subfield[@code='b']"
-        // Author2 lastname : "//mxc:datafield[@tag='701']/mxc:subfield[@code='a']"
-        // Author2 firstname : "//mxc:datafield[@tag='701']/mxc:subfield[@code='b']"
         $author = [];
 
         // Author 1
+        // Lastname
         $authorLastnameArray = $xml->xpath("//mxc:datafield[@tag='700']/mxc:subfield[@code='a']");
         if (!array_key_exists(0, $authorLastnameArray)) {
             $author[0]['lastname'] = "Inconnu";
@@ -186,6 +181,7 @@ class ApiManager
             $author[0]['lastname'] = $authorLastname;
         }
 
+        // Firstname
         $authorFirstnameArray = $xml->xpath("//mxc:datafield[@tag='700']/mxc:subfield[@code='b']");
         if (!array_key_exists(0, $authorFirstnameArray)) {
             $author[0]['firstname'] = null;
@@ -195,6 +191,7 @@ class ApiManager
         }
 
         // Author 2
+        // Lastname
         $authorLastnameArray = $xml->xpath("//mxc:datafield[@tag='702']/mxc:subfield[@code='a']");
         if (!array_key_exists(0, $authorLastnameArray)) {
             return $author;
@@ -203,6 +200,7 @@ class ApiManager
             $author[1]['lastname'] = $authorLastname;
         }
 
+        // Firstname
         $authorFirstnameArray = $xml->xpath("//mxc:datafield[@tag='702']/mxc:subfield[@code='b']");
         if (!array_key_exists(0, $authorFirstnameArray)) {
             $author[1]['firstname'] = null;
@@ -215,18 +213,18 @@ class ApiManager
     }
 
     /**
-     * Give back the editor for the given book
+     * Editor for the given book
      * 
      * @param SimpleXMLElement $xml
      * 
-     * @return string $editor
+     * @return string|null $editor
      */
     private function getEditor($xml)
     {
-        // Editor : "//mxc:datafield[@tag='210']/mxc:subfield[@code='c']"
-        // Editor : "//mxc:datafield[@tag='214']/mxc:subfield[@code='c']" + [ind2 ='0']
+        // First way
         $editorArray = $xml->xpath("//mxc:datafield[@tag='210']/mxc:subfield[@code='c']");
         if (!array_key_exists(0, $editorArray)) {
+            // Second way if first way doesn't exist
             $editorArrayBis = $xml->xpath("//mxc:datafield[@tag='214']/mxc:subfield[@code='c']");
             if (!array_key_exists(0, $editorArrayBis)) {
                 $editor = null;
@@ -241,16 +239,14 @@ class ApiManager
     }
 
     /**
-     * Give back the collection for the given book
+     * Collection for the given book
      * 
      * @param SimpleXMLElement $xml
      * 
-     * @return string $collection
+     * @return string|null $collection
      */
     private function getCollection($xml)
     {
-        // Collection : "//mxc:datafield[@tag='225']/mxc:subfield[@code='a']"
-        // Collection : "//mxc:datafield[@tag='225']/mxc:subfield[@code='i']"
         $collectionArray = $xml->xpath("//mxc:datafield[@tag='225']/mxc:subfield[@code='a']");
         if (!array_key_exists(0, $collectionArray)) {
             $collectionArrayBis = $xml->xpath("//mxc:datafield[@tag='225']/mxc:subfield[@code='i']");
@@ -267,11 +263,11 @@ class ApiManager
     }
 
     /**
-     * Give back the publication date for the given book
+     * Publication date for the given book
      * 
      * @param SimpleXMLElement $xml
      * 
-     * @return string $date
+     * @return string|null $date
      */
     private function getDate($xml)
     {
@@ -295,11 +291,11 @@ class ApiManager
     }
 
     /**
-     * Give back the price for the given book
+     * Price for the given book
      * 
      * @param SimpleXMLElement $xml
      * 
-     * @return string $price
+     * @return string|null $price
      */
     private function getPrice($xml)
     {
@@ -317,11 +313,11 @@ class ApiManager
     }
 
     /**
-     * Give back the pages for the given book
+     * Pages for the given book
      * 
      * @param SimpleXMLElement $xml
      * 
-     * @return string $pages
+     * @return string|null $pages
      */
     private function getPages($xml)
     {
@@ -340,15 +336,14 @@ class ApiManager
     }
 
     /**
-     * Give back cover URL for the given book
+     * Cover URL for the given book
      * 
      * @param SimpleXMLElement $xml
      * 
-     * @return string $coverUrl
+     * @return string|null $coverUrl
      */
     private function getArk($xml)
     {
-        // Ark : "//srw:recordIdentifier"
         $arkArray = $xml->xpath("//srw:recordIdentifier");
         if (!array_key_exists(0, $arkArray)) {
             $coverUrl = null;
@@ -361,26 +356,24 @@ class ApiManager
     }
 
     /**
-     * Give back the summary for the given book
+     * Summary for the given book
      * 
      * @param SimpleXMLElement $xml
      * 
-     * @return string $summary
+     * @return string|null $summary
      */
     private function getSummary($xml)
     {
-        // Summary : "//mxc:datafield[@tag='330']/mxc:subfield[@code='a']"
-        // Summary : "//mxc:datafield[@tag='339']/mxc:subfield[@code='a']"
         $summaryArray = $xml->xpath("//mxc:datafield[@tag='330']/mxc:subfield[@code='a']");
-        if (!array_key_exists(0, $summaryArray)) {
+        if (array_key_exists(0, $summaryArray)) {
+            $summary = $summaryArray[0]->__toString();
+        } else {
             $summaryArrayBis = $xml->xpath("//mxc:datafield[@tag='339']/mxc:subfield[@code='a']");
             if (!array_key_exists(0, $summaryArrayBis)) {
                 $summary = null;
             } else {
                 $summary = $summaryArrayBis[0]->__toString();
             }
-        } else {
-            $summary = $summaryArray[0]->__toString();
         }
 
         return $summary;

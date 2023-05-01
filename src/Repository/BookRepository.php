@@ -41,6 +41,8 @@ class BookRepository extends ServiceEntityRepository
 
     /**
      * Book with given ISBN
+     * 
+     * @return Book Returns a Book object
      */
     public function findByIsbn($isbn)
     {

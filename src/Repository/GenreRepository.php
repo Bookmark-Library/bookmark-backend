@@ -40,7 +40,9 @@ class GenreRepository extends ServiceEntityRepository
     }
 
     /**
-     * Liste des genres par ordre alpha
+     * Genres list in alphabetical order
+     * 
+     * @return Genre[] Returns an array of Genre objects
      */
     public function findAllOrderedByName()
     {
@@ -51,7 +53,9 @@ class GenreRepository extends ServiceEntityRepository
     }
 
     /**
-     * Liste des genres par homeOrder
+     * Genres list by homeOrder
+     * 
+     * @return Genre[] Returns an array of Genre objects
      */
     public function findByHomeOrder()
     {

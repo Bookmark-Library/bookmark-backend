@@ -42,16 +42,15 @@ class UserType extends AbstractType
                     'class' => 'checkbox-inline',
                 ],
             ])
-
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-                // On récupère le form depuis l'event (pour travailler avec)
+                // Get Form from Event
                 $form = $event->getForm();
-                // On récupère le user mappé sur le form depuis l'event
+                // Get User from Form Event
                 $user = $event->getData();
 
-                // Si user existant, il a id non null
+                // If User exist
                 if ($user->getId() !== null) {
-                    // Edit
+                    // Edit User Password
                     $form->add('password', PasswordType::class, [
                         'label' => 'Mot de passe',
                         'mapped' => false,
@@ -71,36 +70,33 @@ class UserType extends AbstractType
                     $form->add('password', PasswordType::class, [
                         'label' => 'Mot de passe',
                         'empty_data' => '',
-                        // On déplace les contraintes de l'entité vers le form d'ajout
+                        // Constraints which was on Entity are declared below
                         'constraints' => [
                             new NotBlank(),
                             new Regex(
                                 '/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-+]).{8,}$/',
                                 "Le mot de passe doit contenir au minimum 8 caractères, une majuscule, un chiffre et un caractère spécial"
                             ),
-
                         ],
-
                     ]);
                 }
             })
-
             ->add('alias', TextType::class)
             ->add('avatar', FileType::class, [
                 'label' => 'Avatar',
                 'mapped' => false,
                 'required' => false,
                 'constraints' => [
-                    // in recents update, use "extensions" for security purpose
+                    // in Symfony 6, use "extensions" for security purpose
                     new File([
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/png'
                         ],
                         'mimeTypesMessage' => 'Merci de télécharger une image valide',
-                ])
-                    ], 
-        ]);
+                    ])
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

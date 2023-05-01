@@ -167,16 +167,18 @@ class BookController extends AbstractController
         $bookArray = $apiManager->getBook($xml);
 
         try {
+            //dd($bookArray);
             $book = $denormalizerInterface->denormalize($bookArray, Book::class);
+
         } catch (NotEncodableValueException $e) {
+            dd('ici');
             return $this->json(
                 ['error' => 'Tableau invalide'],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
 
-
-        // Search if bokk isbn already exist in database and add it in User's Library
+        // Search if book isbn already exist in database and add it in User's Library
         $existingBookArray = $bookRepository->findByIsbn($book->getIsbn());
 
         if ($existingBookArray) {
@@ -184,6 +186,7 @@ class BookController extends AbstractController
             $existingLibrary = $libraryRepository->findByLibrary($user, $existingBook);
 
             if ($existingLibrary) {
+              
                 return $this->json(
                     ['error' => 'Livre déjà dans la bibliothèque'],
                     Response::HTTP_CONFLICT

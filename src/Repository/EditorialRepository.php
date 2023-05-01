@@ -40,7 +40,9 @@ class EditorialRepository extends ServiceEntityRepository
     }
 
     /**
-     * Liste des editoriaux par ordre alpha
+     * Editorials list in alphabetical order
+     * 
+     * @return Editorial[] Returns an array of Editorial objects
      */
     public function findAllOrderedByName()
     {
@@ -52,6 +54,8 @@ class EditorialRepository extends ServiceEntityRepository
 
     /**
      * Editorial for home page
+     * 
+     * @return Editorial Returns Editorial object
      */
     public function findByHomeActive()
     {
