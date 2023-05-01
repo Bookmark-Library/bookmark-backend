@@ -2,12 +2,10 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Book;
 use App\Entity\Library;
-use App\Repository\BookRepository;
 use App\Repository\GenreRepository;
 use App\Repository\LibraryRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,7 +17,9 @@ use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 class LibraryController extends AbstractController
 {
     /**
-     * @Route("/api/libraries/", name="app_api_libraries_get_collection")
+     * Get all libraries for connected user
+     * 
+     * @Route("/api/libraries/", name="app_api_libraries_get_collection", methods={"GET"})
      */
     public function getCollection()
     {
@@ -50,84 +50,11 @@ class LibraryController extends AbstractController
     }
 
     /**
-     * Create library item
-     * 
-     * @Route("/api/libraries", name="app_api_libraries_post", methods={"POST"})
-     */
-    public function createItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, BookRepository $bookRepository, GenreRepository $genreRepository)
-    {
-        /** @var \App\Entity\User $user */
-        $user = $this->getUser();
-
-        if ($user === null) {
-            return $this->json(
-                ['error' => 'Utilisateur non trouvé !'],
-                Response::HTTP_NOT_FOUND
-            );
-        }
-
-        $jsonContent = $request->getContent();
-
-        // Getting Book for Library
-        $contentForBook = json_decode($request->getContent(), true);
-        $bookId = $contentForBook["book_id"];
-        $book = $bookRepository->find($bookId);
-        $genreId = $contentForBook["genre_id"];
-        $genre = $genreRepository->find($genreId);
-
-        try {
-            $library = $serializer->deserialize($jsonContent, Library::class, 'json');
-        } catch (NotEncodableValueException $e) {
-            return $this->json(
-                ['error' => 'JSON invalide'],
-                Response::HTTP_UNPROCESSABLE_ENTITY
-            );
-        }
-
-        $errors = $validator->validate($library);
-
-        if (count($errors) > 0) {
-            $errorsClean = [];
-            // @Retourner des erreurs de validation propres
-            /** @var ConstraintViolation $error */
-            foreach ($errors as $error) {
-                $errorsClean[$error->getPropertyPath()][] = $error->getMessage();
-            };
-
-            return $this->json($errorsClean, Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        $entityManager = $doctrine->getManager();
-        $book->addGenre($genre);
-
-        $library->setUser($user);
-        $library->setBook($book);
-        $library->setGenre($genre);
-        $entityManager->persist($library);
-        $entityManager->flush();
-
-        return $this->json(
-            $library,
-            Response::HTTP_CREATED,
-            [
-                'Location' => $this->generateUrl('app_api_libraries_get_collection')
-            ],
-            ['groups' => [
-                'get_users_item',
-                'get_library_collection',
-                'get_books_collection',
-                'get_authors_collection',
-                'get_genres_collection'
-            ]]
-        );
-    }
-
-    /**
-     * Update library item
+     * Update the library of given Book for connected User
      * 
      * @Route("/api/libraries/{id<\d+>}", name="app_api_libraries_update", methods={"PUT"})
      */
-    public function updateItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, Library $library, GenreRepository $genreRepository, BookRepository $bookRepository)
+    public function updateItem(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, ValidatorInterface $validator, Library $library, GenreRepository $genreRepository)
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
@@ -140,15 +67,6 @@ class LibraryController extends AbstractController
         }
 
         $jsonContent = $request->getContent();
-
-        $contentForBook = json_decode($request->getContent(), true);
-        $genreId = $contentForBook["genre_id"];
-        if ($genreId !== null) {
-            $genre = $genreRepository->find($genreId);
-            $book = $library->getBook();
-            $book->addGenre($genre);
-            $library->setGenre($genre);
-        }
 
         try {
             $newLibrary = $serializer->deserialize($jsonContent, Library::class, 'json');
@@ -179,9 +97,19 @@ class LibraryController extends AbstractController
         $library->setRate($newLibrary->getRate());
         $library->setWishlist($newLibrary->isWishlist());
 
-        $entityManager = $doctrine->getManager();
-        $entityManager->persist($library);
-        $entityManager->flush();
+        // Get genre_is from JSON Reponse and set it for User's selected genre and Book's genre
+        $contentForBook = json_decode($request->getContent(), true);
+        $genreId = $contentForBook["genre_id"];
+        if ($genreId !== null) {
+            $genre = $genreRepository->find($genreId);
+            $book = $library->getBook();
+            $book->addGenre($genre);
+            $library->setGenre($genre);
+        }
+
+        $em->persist($library);
+
+        $em->flush();
 
         return $this->json(
             $library,
@@ -199,13 +127,12 @@ class LibraryController extends AbstractController
         );
     }
 
-
     /**
-     * Delete library item
+     * Delete given book from User's Library
      * 
      * @Route("/api/libraries/{id<\d+>}", name="app_api_libraries_delete", methods={"DELETE"})
      */
-    public function deleteItem(Request $request, LibraryRepository $libraryRepository, Library $library)
+    public function deleteItem(LibraryRepository $libraryRepository, Library $library)
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();

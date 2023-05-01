@@ -2,7 +2,6 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Editorial;
 use App\Repository\EditorialRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,9 +10,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class EditorialController extends AbstractController
 {
     /**
-     * @Route("/api/editorials", name="app_api_editorials_get", methods={"GET"})
+     * Get the editorial for home page chosen by redactors
+     * 
+     * @Route("/api/editorials", name="app_api_editorials_get_item", methods={"GET"})
      */
-    public function getCollection(EditorialRepository $editorialRepository): Response
+    public function getItemForHome(EditorialRepository $editorialRepository)
     {
         $editorials = $editorialRepository->findByHomeActive();
 

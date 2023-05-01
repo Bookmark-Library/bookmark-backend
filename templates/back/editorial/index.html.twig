@@ -10,7 +10,7 @@
 
 	{{ include('_flash_messages.html.twig') }}
 
-	<table class="table">
+	<table class="table table-striped">
 		<thead>
 			<tr>
 				<th>Id</th>
@@ -36,7 +36,7 @@
 
 					<td>{{ editorial.active }}</td>
 					<td>
-						<a href="{{ path('app_back_editorial_show', {'id': editorial.id}) }}" class="btn btn-primary">Voir</a>
+						<a href="{{ path('app_back_editorial_show', {'id': editorial.id}) }}" class="btn btn-primary mb-1">Voir</a>
 						<a href="{{ path('app_back_editorial_edit', {'id': editorial.id}) }}" class="btn btn-warning">Modifier</a>
 					</td>
 				</tr>

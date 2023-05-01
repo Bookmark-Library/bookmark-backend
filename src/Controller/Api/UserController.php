@@ -4,11 +4,9 @@ namespace App\Controller\Api;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Service\FileUploader;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -20,7 +18,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/api/users/", name="app_api_users_get_item")
+     * Get connected user's data in JSON
+     * 
+     * @Route("/api/users/", name="app_api_users_get_item", methods={"GET"})
      */
     public function getItem()
     {
@@ -47,11 +47,11 @@ class UserController extends AbstractController
     }
 
     /**
-     * Create user item
+     * Create an user
      * 
-     * @Route("/api/users", name="app_api_users_post", methods={"POST"})
+     * @Route("/api/users", name="app_api_users_create", methods={"POST"})
      */
-    public function createItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher, FileUploader $fileUploader)
+    public function createItem(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher)
     {
         $jsonContent = $request->getContent();
 
@@ -81,9 +81,8 @@ class UserController extends AbstractController
         $hashedPassword = $userPasswordHasher->hashPassword($user, $user->getPassword());
         $user->setPassword($hashedPassword);
 
-        $entityManager = $doctrine->getManager();
-        $entityManager->persist($user);
-        $entityManager->flush();
+        $em->persist($user);
+        $em->flush();
 
         return $this->json(
             $user,
@@ -98,11 +97,11 @@ class UserController extends AbstractController
     }
 
     /**
-     * Update user item
+     * Update connected user's data
      * 
      * @Route("/api/users", name="app_api_users_update", methods={"PUT"})
      */
-    public function updateItem(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher)
+    public function updateItem(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, ValidatorInterface $validator)
     {
         /** @var \App\Entity\User $connectedUser */
         $connectedUser = $this->getUser();
@@ -129,7 +128,6 @@ class UserController extends AbstractController
 
         if (count($errors) > 0) {
             $errorsClean = [];
-            // @Retourner des erreurs de validation propres
             /** @var ConstraintViolation $error */
             foreach ($errors as $error) {
                 $errorsClean[$error->getPropertyPath()][] = $error->getMessage();
@@ -143,9 +141,8 @@ class UserController extends AbstractController
         $connectedUser->setAlias($user->getAlias());
         $connectedUser->setAvatar($user->getAvatar());
 
-        $entityManager = $doctrine->getManager();
-        $entityManager->persist($connectedUser);
-        $entityManager->flush();
+        $em->persist($connectedUser);
+        $em->flush();
 
         return $this->json(
             $connectedUser,
@@ -160,11 +157,11 @@ class UserController extends AbstractController
     }
 
     /**
-     * Update user's password
+     * Update connected user's password
      * 
      * @Route("/api/users/password", name="app_api_users_password_update", methods={"PUT"})
      */
-    public function updatePassword(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher)
+    public function updatePassword(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher)
     {
         /** @var \App\Entity\User $connectedUser */
         $connectedUser = $this->getUser();
@@ -178,10 +175,11 @@ class UserController extends AbstractController
 
         $jsonContent = $request->getContent();
 
+        // get currentPassword from JSON's Response and check it
         $contentForPassword = json_decode($request->getContent(), true);
-        $oldPassword = $contentForPassword["password_check"];
+        $currentPassword = $contentForPassword["password_check"];
         
-        if(!password_verify($oldPassword, $connectedUser->getPassword())){
+        if(!password_verify($currentPassword, $connectedUser->getPassword())){
             return $this->json(
                 ['error' => 'Ancien mot de passe invalide !'],
                 Response::HTTP_CONFLICT
@@ -214,12 +212,10 @@ class UserController extends AbstractController
         // Password hashed
         $hashedPassword = $userPasswordHasher->hashPassword($user, $user->getPassword());
 
-        // Update connected User
+        // Update connected User's password
         $connectedUser->setPassword($hashedPassword);
-
-        $entityManager = $doctrine->getManager();
-        $entityManager->persist($connectedUser);
-        $entityManager->flush();
+        $em->persist($connectedUser);
+        $em->flush();
 
         return $this->json(
             $connectedUser,
@@ -235,11 +231,11 @@ class UserController extends AbstractController
 
 
     /**
-     * Update user avatar
+     * Update connected user's avatar
      * 
      * @Route("/api/users/avatar", name="app_api_users_avatar_update", methods={"POST"})
      */
-    public function updateAvatar(Request $request, ParameterBagInterface $params, ManagerRegistry $doctrine)
+    public function updateAvatar(Request $request, ParameterBagInterface $params, EntityManagerInterface $em)
     {
         /** @var \App\Entity\User $connectedUser */
         $connectedUser = $this->getUser();
@@ -251,6 +247,7 @@ class UserController extends AbstractController
             );
         }
        
+        // get image file
         $image = $request->files->get('file');
 
         // rename file
@@ -259,11 +256,10 @@ class UserController extends AbstractController
         // save image in avatar's directory
         $image->move($params->get('avatars_directory'), $fileName);
 
+        // set avatar's path in User entity
         $connectedUser->setAvatar($fileName);
-
-        $entityManager = $doctrine->getManager();
-        $entityManager->persist($connectedUser);
-        $entityManager->flush();
+        $em->persist($connectedUser);
+        $em->flush();
 
         return $this->json([
             'message' => 'Image uploaded successfully.'
@@ -272,7 +268,7 @@ class UserController extends AbstractController
 
 
     /**
-     * Delete user item
+     * Delete an user
      * 
      * @Route("/api/users", name="app_api_users_delete", methods={"DELETE"})
      */
