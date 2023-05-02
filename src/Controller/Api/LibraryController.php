@@ -19,7 +19,7 @@ class LibraryController extends AbstractController
     /**
      * Get all libraries for connected user
      * 
-     * @Route("/api/libraries/", name="app_api_libraries_get_collection", methods={"GET"})
+     * @Route("/api/secure/libraries/", name="app_api_libraries_get_collection", methods={"GET"})
      */
     public function getCollection()
     {
@@ -52,7 +52,7 @@ class LibraryController extends AbstractController
     /**
      * Update the library of given Book for connected User
      * 
-     * @Route("/api/libraries/{id<\d+>}", name="app_api_libraries_update", methods={"PUT"})
+     * @Route("/api/secure/libraries/{id<\d+>}", name="app_api_libraries_update", methods={"PUT"})
      */
     public function updateItem(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, ValidatorInterface $validator, Library $library, GenreRepository $genreRepository)
     {
@@ -130,7 +130,7 @@ class LibraryController extends AbstractController
     /**
      * Delete given book from User's Library
      * 
-     * @Route("/api/libraries/{id<\d+>}", name="app_api_libraries_delete", methods={"DELETE"})
+     * @Route("/api/secure/libraries/{id<\d+>}", name="app_api_libraries_delete", methods={"DELETE"})
      */
     public function deleteItem(LibraryRepository $libraryRepository, Library $library)
     {

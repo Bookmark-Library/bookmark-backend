@@ -20,7 +20,7 @@ class UserController extends AbstractController
     /**
      * Get connected user's data in JSON
      * 
-     * @Route("/api/users/", name="app_api_users_get_item", methods={"GET"})
+     * @Route("/api/secure/users/", name="app_api_users_get_item", methods={"GET"})
      */
     public function getItem()
     {
@@ -98,7 +98,7 @@ class UserController extends AbstractController
     /**
      * Update connected user's data
      * 
-     * @Route("/api/users", name="app_api_users_update", methods={"PUT"})
+     * @Route("/api/secure/users", name="app_api_users_update", methods={"PUT"})
      */
     public function updateItem(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, ValidatorInterface $validator)
     {
@@ -158,7 +158,7 @@ class UserController extends AbstractController
     /**
      * Update connected user's password
      * 
-     * @Route("/api/users/password", name="app_api_users_password_update", methods={"PUT"})
+     * @Route("/api/secure/users/password", name="app_api_users_password_update", methods={"PUT"})
      */
     public function updatePassword(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher)
     {
@@ -231,7 +231,7 @@ class UserController extends AbstractController
     /**
      * Update connected user's avatar
      * 
-     * @Route("/api/users/avatar", name="app_api_users_avatar_update", methods={"POST"})
+     * @Route("/api/secure/users/avatar", name="app_api_users_avatar_update", methods={"POST"})
      */
     public function updateAvatar(Request $request, ParameterBagInterface $params, EntityManagerInterface $em)
     {
@@ -268,7 +268,7 @@ class UserController extends AbstractController
     /**
      * Delete an user
      * 
-     * @Route("/api/users", name="app_api_users_delete", methods={"DELETE"})
+     * @Route("/api/secure/users", name="app_api_users_delete", methods={"DELETE"})
      */
     public function deleteItem(UserRepository $userRepository)
     {

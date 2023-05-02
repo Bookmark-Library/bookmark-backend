@@ -79,7 +79,7 @@ class BookController extends AbstractController
     /**
      * Create a book 
      * 
-     * @Route("/api/books", name="app_api_books_create", methods={"POST"})
+     * @Route("/api/secure/books", name="app_api_books_create", methods={"POST"})
      */
     public function createItem(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, ValidatorInterface $validator, SluggerInterface $slugger): Response
     {
@@ -143,7 +143,7 @@ class BookController extends AbstractController
     /**
      * Create a book by ISBN with BNF API
      * 
-     * @Route("/api/books/isbn", name="app_api_books_create_isbn", methods={"POST"})
+     * @Route("/api/secure/books/isbn", name="app_api_books_create_isbn", methods={"POST"})
      */
     public function createItemByIsbn(Request $request, DenormalizerInterface $denormalizerInterface, EntityManagerInterface $em, ApiManager $apiManager, ValidatorInterface $validator, BookRepository $bookRepository, LibraryRepository $libraryRepository, SluggerInterface $slugger): Response
     {

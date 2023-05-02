@@ -25,15 +25,15 @@ security:
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
-        #api_secure:
-        #    pattern:   ^/api/secure
-        #    stateless: true
-        #    jwt: ~
+        api_secure:
+            pattern:   ^/api/secure
+            stateless: true
+            jwt: ~
         
         api_public:
             pattern:   ^/api
             stateless: true
-            jwt: ~
+          
 
         main:
             lazy: true
@@ -56,10 +56,8 @@ security:
         - { path: ^/back/user, roles: ROLE_ADMIN }
         - { path: ^/back, roles: ROLE_EDITOR }
         - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
-        - { path: ^/api/editorials, roles: PUBLIC_ACCESS, methods: GET }
-        - { path: ^/api/genres, roles: PUBLIC_ACCESS, methods: GET }
-        - { path: ^/api/users, roles: PUBLIC_ACCESS, methods: POST }
-        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/secure, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api, roles: PUBLIC_ACCESS}
 
     role_hierarchy:
         ROLE_EDITOR: ROLE_USER
