@@ -43,20 +43,20 @@
 						<ul class="navbar-nav me-auto  mb-2 mb-lg-0">
 							{% if is_granted("ROLE_ADMIN") %}
 								<li class="nav-item">
-									<a class="nav-link {% if app.request.attributes.get('_route') == 'app_back_user_index' %}active{% endif %}" href="{{ path("app_back_user_index")}}">
+									<a class="nav-link {% if (app.request.attributes.get('_route') == 'app_back_user_index' or app.request.attributes.get('_route') == 'app_back_user_new' or app.request.attributes.get('_route') == 'app_back_user_show' or app.request.attributes.get('_route') == 'app_back_user_edit') %}active{% endif %}" href="{{ path("app_back_user_index")}}">
 										Utilisateurs</a>
 								</li>
 							{% endif %}
 							<li class="nav-item">
-								<a class="nav-link {% if app.request.attributes.get('_route') == 'app_back_book_index' %}active{% endif %}" href="{{ path("app_back_book_index")}}">
+								<a class="nav-link {% if (app.request.attributes.get('_route') == 'app_back_book_index' or app.request.attributes.get('_route') == 'app_back_book_new' or app.request.attributes.get('_route') == 'app_back_book_show' or app.request.attributes.get('_route') == 'app_back_book_edit') %}active{% endif %}" href="{{ path("app_back_book_index")}}">
 									Livres</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link {% if app.request.attributes.get('_route') == 'app_back_genre_index' %}active{% endif %}" href="{{ path("app_back_genre_index")}}">
+								<a class="nav-link {% if (app.request.attributes.get('_route') == 'app_back_genre_index' or app.request.attributes.get('_route') == 'app_back_genre_new' or app.request.attributes.get('_route') == 'app_back_genre_show' or app.request.attributes.get('_route') == 'app_back_genre_edit' or app.request.attributes.get('_route') == 'app_back_genre_home_order') %}active{% endif %}" href="{{ path("app_back_genre_index")}}">
 									Genres</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link {% if app.request.attributes.get('_route') == 'app_back_editorial_index' %}active{% endif %}" href="{{ path("app_back_editorial_index")}}">
+								<a class="nav-link {% if (app.request.attributes.get('_route') == 'app_back_editorial_index' or app.request.attributes.get('_route') == 'app_back_editorial_new' or app.request.attributes.get('_route') == 'app_back_editorial_show' or app.request.attributes.get('_route') == 'app_back_editorial_edit' or app.request.attributes.get('_route') == 'app_back_user_show' or app.request.attributes.get('_route') == 'app_back_editorial_home_active') %}active{% endif %}" href="{{ path("app_back_editorial_index")}}">
 									Editorial</a>
 							</li>
 						</ul>
@@ -77,8 +77,8 @@
 										</h6>
 									</li>
 									{# <li>
-																																																																																	<a class="dropdown-item" href="#">Profil</a>
-																																																																																	</li>  #}
+																																																																																																																																																																																																						<a class="dropdown-item" href="#">Profil</a>
+																																																																																																																																																																																																						</li>  #}
 								</ul>
 							</li>
 							<li>
