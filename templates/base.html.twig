@@ -62,10 +62,12 @@
 						</ul>
 						<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 							<li class="nav-item dropdown">
-								<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-									<span>{{ app.user.alias }}</span>
-									<i class="bi bi-person-square"></i>
-								</a>
+								{% if is_granted("IS_AUTHENTICATED_FULLY") %}
+									<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+										<span>{{ app.user.alias }}</span>
+										<i class="bi bi-person-square"></i>
+									</a>
+								{% endif %}
 								<ul class="dropdown-menu">
 									<li>
 										<h6 class="dropdown-header">
@@ -77,8 +79,8 @@
 										</h6>
 									</li>
 									{# <li>
-																																																																																																																																																																																																						<a class="dropdown-item" href="#">Profil</a>
-																																																																																																																																																																																																						</li>  #}
+																																																																																																																																																																																																															<a class="dropdown-item" href="#">Profil</a>
+																																																																																																																																																																																																															</li>  #}
 								</ul>
 							</li>
 							<li>
