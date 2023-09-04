@@ -33,15 +33,14 @@ class ChangePasswordFormType extends AbstractType
                     'label' => 'New password',
                 ],
                 'second_options' => [
-                    'attr' => ['autocomplete' => 'new-password'],
-                    'label' => 'Repeat Password',
+                    'attr' => ['autocomplete' => 'Entrer votre nouveau mot de passe'],
+                    'label' => 'Confirmer votre mot de passe',
                 ],
-                'invalid_message' => 'The password fields must match.',
+                'invalid_message' => 'Les mots de passe doivent correspondre.',
                 // Instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
