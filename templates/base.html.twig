@@ -1,19 +1,99 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+	<head>
+		<meta charset="UTF-8">
+		<meta
+		name="viewport" content="width=device-width, initial-scale=1">
+		<!-- Bootstrap CSS -->
+		<link
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+		<!-- Bootstrap icons -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
-</html>
+		<link rel="stylesheet" href="{{ asset('assets/css/bookmark.css') }}">
+
+		<title>
+			{% block title %}BookMark
+			{% endblock %}
+		</title>
+		<!-- favicon -->
+		<link
+		rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
+		{# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+		{% block stylesheets %}
+			{{ encore_entry_link_tags('app') }}
+		{% endblock %}
+
+		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
+		{% endblock %}
+	</head>
+	<body>
+
+		{% block nav %}
+			<nav class="navbar navbar-expand-lg navbar-dark header-bg">
+				<div class="container-fluid">
+					<a href="{{ path("app_back_home")}}" class="d-flex align-items-center mb-2 mb-lg-0 text-decoration-none header-logo">
+						<img src="{{asset('assets/images/bookmark-logo.svg')}}" height="70" alt="Logo BookMark">
+					</a>
+					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="collapse navbar-collapse" id="navbarSupportedContent">
+						<ul class="navbar-nav me-auto  mb-2 mb-lg-0">
+							{% if is_granted("ROLE_ADMIN") %}
+								<li class="nav-item">
+									<a class="nav-link {% if (app.request.attributes.get('_route') == 'app_back_user_index' or app.request.attributes.get('_route') == 'app_back_user_new' or app.request.attributes.get('_route') == 'app_back_user_show' or app.request.attributes.get('_route') == 'app_back_user_edit') %}active{% endif %}" href="{{ path("app_back_user_index")}}">
+										Utilisateurs</a>
+								</li>
+							{% endif %}
+							<li class="nav-item">
+								<a class="nav-link {% if (app.request.attributes.get('_route') == 'app_back_book_index' or app.request.attributes.get('_route') == 'app_back_book_new' or app.request.attributes.get('_route') == 'app_back_book_show' or app.request.attributes.get('_route') == 'app_back_book_edit') %}active{% endif %}" href="{{ path("app_back_book_index")}}">
+									Livres</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link {% if (app.request.attributes.get('_route') == 'app_back_genre_index' or app.request.attributes.get('_route') == 'app_back_genre_new' or app.request.attributes.get('_route') == 'app_back_genre_show' or app.request.attributes.get('_route') == 'app_back_genre_edit' or app.request.attributes.get('_route') == 'app_back_genre_home_order') %}active{% endif %}" href="{{ path("app_back_genre_index")}}">
+									Genres</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link {% if (app.request.attributes.get('_route') == 'app_back_editorial_index' or app.request.attributes.get('_route') == 'app_back_editorial_new' or app.request.attributes.get('_route') == 'app_back_editorial_show' or app.request.attributes.get('_route') == 'app_back_editorial_edit' or app.request.attributes.get('_route') == 'app_back_user_show' or app.request.attributes.get('_route') == 'app_back_editorial_home_active') %}active{% endif %}" href="{{ path("app_back_editorial_index")}}">
+									Editorial</a>
+							</li>
+						</ul>
+						<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+							<li class="nav-item dropdown">
+								{% if is_granted("IS_AUTHENTICATED_FULLY") %}
+									<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+										<span>{{ app.user.alias }}</span>
+										<i class="bi bi-person-square"></i>
+									</a>
+								{% endif %}
+								<ul class="dropdown-menu">
+									<li>
+										<h6 class="dropdown-header">
+											{% if is_granted("ROLE_ADMIN") %}
+												Administrateur
+											{% elseif is_granted("ROLE_EDITOR") %}
+												Rédacteur
+											{% endif %}
+										</h6>
+									</li>
+									{# <li>
+																																																																																																																																																																																																															<a class="dropdown-item" href="#">Profil</a>
+																																																																																																																																																																																																															</li>  #}
+								</ul>
+							</li>
+							<li>
+								<a class="btn btn-danger" href=" {{ path('app_logout') }}">Déconnexion</a>
+							</li>
+						</ul>
+
+					</div>
+				</div>
+			</nav>
+		{% endblock %}
+		<div class="container mt-5"> {% block body %}{% endblock %}
+			</div>
+			<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+		</body>
+	</html>

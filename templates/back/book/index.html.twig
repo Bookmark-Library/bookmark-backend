@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des livres
+{% endblock %}
+
+{% block body %}
+	<h1>Liste des livres</h1>
+
+	<a href="{{ path('app_back_book_new') }}" class="btn btn-success">Créer</a>
+
+	{{ include('_flash_messages.html.twig') }}
+
+	<table class="table table-striped">
+		<thead>
+			<tr class="text-center">
+				<th>Id</th>
+				<th>Titre</th>
+				<th>Editeur</th>
+				<th>Isbn</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for book in books %}
+				<tr class="text-center">
+					<td>{{ book.id }}</td>
+					<td>{{ book.title }}</td>
+					<td>{{ book.editor }}</td>
+					<td>{{ book.isbn }}</td>
+					<td class="d-md-flex">
+						<a href="{{ path('app_back_book_show', {'id': book.id}) }}" class="btn btn-primary me-1">Voir</a>
+						<a href="{{ path('app_back_book_edit', {'id': book.id}) }}" class="btn btn-warning">Modifier</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="11">Aucun élément</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l'ordre en page d'accueil
+{% endblock %}
+
+{% block body %}
+	<h1>Modifier l'ordre en page d'accueil
+	</h1>
+
+	{{ include('back/genre/_home_order_form.html.twig') }}
+
+	<a href="{{ path('app_back_genre_index') }}" class="btn btn-primary mt-2">Retour à la liste</a>
+
+{% endblock %}

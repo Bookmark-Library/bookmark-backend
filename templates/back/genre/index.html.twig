@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des genres
+{% endblock %}
+
+{% block body %}
+	<h1>Liste des genres</h1>
+
+	<a href="{{ path('app_back_genre_new') }}" class="btn btn-success">Créer</a>
+	<a href="{{ path('app_back_genre_home_order') }}" class="btn btn-info">Définir l'ordre en page d'accueil</a>
+
+	{{ include('_flash_messages.html.twig') }}
+
+	<table class="table table-striped">
+		<thead>
+			<tr class="text-center">
+				<th>Id</th>
+				<th>Nom</th>
+				<th>Ordre en page d'accueil</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for genre in genres %}
+				<tr class="text-center">
+					<td>{{ genre.id }}</td>
+					<td>{{ genre.name }}</td>
+					<td>{{ genre.homeOrder }}</td>
+					<td>
+						<a href="{{ path('app_back_genre_show', {'id': genre.id}) }}" class="btn btn-primary">Voir</a>
+						<a href="{{ path('app_back_genre_edit', {'id': genre.id}) }}" class="btn btn-warning">Modifier</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="4">Aucun élément</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+
+{% endblock %}

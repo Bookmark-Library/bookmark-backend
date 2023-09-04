@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un éditorial
+{% endblock %}
+
+{% block body %}
+	<h1>Ajouter un éditorial</h1>
+
+	{{ include('back/editorial/_form.html.twig') }}
+
+	<a href="{{ path('app_back_book_index') }}" class="btn btn-primary">Retour à la liste</a>
+{% endblock %}

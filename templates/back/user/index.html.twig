@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des utilisateurs
+{% endblock %}
+
+{% block body %}
+	<h1>Liste des utilisateurs</h1>
+	<a href="{{ path('app_back_user_new') }}" class="btn btn-success">Créer</a>
+
+	{{ include('_flash_messages.html.twig') }}
+
+	<table class="table table-striped">
+		<thead>
+			<tr class="text-center">
+				<th>Id</th>
+				<th>Email</th>
+				<th>Roles</th>
+				<th>Avatar</th>
+				<th>Alias</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for user in users %}
+				<tr class="text-center">
+					<td>{{ user.id }}</td>
+					<td>{{ user.email }}</td>
+					<td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+					<td>
+						{% if user.avatar is not null %}
+							<img style="width: 100px" src="{{ asset('assets/images/avatars/' ~ user.avatar) }}" alt="avatar">
+
+						{% endif %}
+					</td>
+					<td>{{ user.alias }}</td>
+					<td>
+						<a href="{{ path('app_back_user_show', {'id': user.id}) }}" class="btn btn-primary">Voir</a>
+						<a href="{{ path('app_back_user_edit', {'id': user.id}) }}" class="btn btn-warning">Modifier</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="7">Aucun élément</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+
+{% endblock %}

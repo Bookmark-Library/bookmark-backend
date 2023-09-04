@@ -1,0 +1,25 @@
+<form action="" method="post">
+	<div class="row">
+		<div class="form-group col">
+			<label for="emplacement">Editorial</label>
+
+			<select class="form-control" id="emplacement" name="active">
+				<option value="0">Choisissez :</option>
+
+				{% for editorial in editorials %}
+
+					{% set selected = '' %}
+					{% if (editorial.active) == 1  %}
+						{% set selected = 'selected' %}
+					{% endif %}
+
+					<option value="{{ editorial.id }}" {{ selected }}>{{ editorial.title }}</option>
+
+				{% endfor %}
+
+			</select>
+		</div>
+	</div>
+
+	<button type="submit" class="btn btn-success mt-2">Enregistrer</button>
+</form>

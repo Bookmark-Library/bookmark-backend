@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ genre.name }}
+{% endblock %}
+
+{% block body %}
+	<h1>{{ genre.name }}</h1>
+
+	<table class="table">
+		<tbody>
+			<tr>
+				<th>Id</th>
+				<td>{{ genre.id }}</td>
+			</tr>
+			<tr>
+				<th>Nom</th>
+				<td>{{ genre.name }}</td>
+			</tr>
+			<tr>
+				<th>Ordre en page d'accueil</th>
+				<td>{{ genre.homeOrder }}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<a href="{{ path('app_back_genre_index') }}" class="btn btn-primary">Retour à la liste</a>
+
+	<a href="{{ path('app_back_genre_edit', {'id': genre.id}) }}" class="btn btn-warning">Modifier</a>
+
+	{{ include('back/genre/_delete_form.html.twig') }}
+{% endblock %}
