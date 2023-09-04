@@ -177,8 +177,8 @@ class UserController extends AbstractController
         // get currentPassword from JSON's Response and check it
         $contentForPassword = json_decode($request->getContent(), true);
         $currentPassword = $contentForPassword["password_check"];
-        
-        if(!password_verify($currentPassword, $connectedUser->getPassword())){
+
+        if (!password_verify($currentPassword, $connectedUser->getPassword())) {
             return $this->json(
                 ['error' => 'Ancien mot de passe invalide !'],
                 Response::HTTP_CONFLICT
@@ -244,12 +244,12 @@ class UserController extends AbstractController
                 Response::HTTP_NOT_FOUND
             );
         }
-       
+
         // get image file
         $image = $request->files->get('file');
 
         // rename file
-        $fileName = uniqid().'.' . $image->getClientOriginalName();
+        $fileName = uniqid() . '.' . $image->getClientOriginalName();
 
         // save image in avatar's directory
         $image->move($params->get('avatars_directory'), $fileName);
@@ -285,10 +285,8 @@ class UserController extends AbstractController
         $userRepository->remove($user, true);
 
         return $this->json(
-            $user,
+            ['message' => 'Utilisateur supprimé'],
             Response::HTTP_NO_CONTENT,
-            [],
-            [],
         );
     }
 }
